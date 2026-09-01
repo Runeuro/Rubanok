@@ -190,8 +190,8 @@ td input[type=text]:focus{background:var(--blue2)}
 .schedule-custom{width:100%;min-height:42px;border:1px dashed #cfd6de;border-radius:8px;padding:7px 8px;
   resize:vertical;outline:0;background:#fff;font-size:12px}
 .schedule-custom:focus{border-color:#9db8f8}
-.schedule-sources{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
-.schedule-source-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px}
+.schedule-sources{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 14px}
+.schedule-source-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:10px}
 .schedule-source-title{font-size:12px;font-weight:750;margin-bottom:9px}
 .schedule-source-list{display:flex;flex-wrap:wrap;gap:7px;min-height:36px}
 .schedule-hint{font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0 0}
@@ -282,13 +282,6 @@ td input[type=text]:focus{background:var(--blue2)}
     </div>
   </div>
 
-  <div class="card">
-    <div class="section-titlebar">Расписание монтажников</div>
-    <div class="schedule-wrap">
-      <div id="scheduleBoard" class="schedule-board"></div>
-    </div>
-  </div>
-
   <div class="schedule-sources">
     <div class="schedule-source-card">
       <div class="schedule-source-title">🟩 Монтаж — из заказов</div>
@@ -297,6 +290,14 @@ td input[type=text]:focus{background:var(--blue2)}
     <div class="schedule-source-card">
       <div class="schedule-source-title">🟫 Доделки</div>
       <div id="scheduleDodelki" class="schedule-source-list"></div>
+    </div>
+  </div>
+
+
+  <div class="card">
+    <div class="section-titlebar">Расписание монтажников</div>
+    <div class="schedule-wrap">
+      <div id="scheduleBoard" class="schedule-board"></div>
     </div>
   </div>
 
