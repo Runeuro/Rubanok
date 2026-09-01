@@ -49,7 +49,7 @@ body.view-home .site-header{display:none}
   background:rgba(255,255,255,.86);box-shadow:0 25px 70px rgba(31,41,55,.10)}
 .cover-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px}
 
-.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.menu-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
 .menu-card{display:block;width:100%;text-align:left;font:inherit;padding:22px;border-radius:20px;border:1px solid var(--line);
   background:linear-gradient(145deg,#fff,#f7f8fa);transition:.2s;min-height:170px}
 .menu-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#cfd6df}
@@ -167,6 +167,40 @@ td input[type=text]:focus{background:var(--blue2)}
 .toast{position:fixed;right:16px;bottom:16px;z-index:300;background:#172033;color:#fff;padding:11px 14px;border-radius:11px;
   box-shadow:0 12px 30px rgba(0,0,0,.18);font-size:12px;max-width:min(360px,calc(100vw - 32px))}
 @media(max-width:760px){.toast{right:10px;bottom:10px}}
+
+/* ---------- График ---------- */
+.schedule-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.schedule-board{min-width:760px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+.schedule-grid{display:grid;grid-template-columns:150px repeat(5,minmax(120px,1fr))}
+.schedule-cell{min-height:96px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
+.schedule-cell:nth-child(6n){border-right:0}
+.schedule-head{min-height:44px;background:#f5f7fa;font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center}
+.schedule-name{background:#fafbfc;font-weight:650}
+.schedule-name input{width:100%;height:36px;border:1px solid transparent;background:transparent;border-radius:8px;padding:7px 8px;outline:0}
+.schedule-name input:focus{border-color:#cbd5e1;background:#fff}
+.schedule-drop{min-height:80px}
+.schedule-drop.drag-over{background:#f0f7f1;box-shadow:inset 0 0 0 2px #b9d7bd}
+.schedule-item{display:flex;align-items:center;gap:6px;padding:7px 9px;border-radius:9px;margin-bottom:6px;
+  cursor:grab;user-select:none;font-size:12px;font-weight:700;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.schedule-item:active{cursor:grabbing}
+.schedule-m{background:#dff1df;border:1px solid #c3dec3;color:#315c36}
+.schedule-d{background:#eadbc9;border:1px solid #dac5aa;color:#684d31}
+.schedule-item .item-remove{margin-left:auto;border:0;background:transparent;color:inherit;opacity:.55;padding:0 2px;font-size:16px}
+.schedule-item .item-remove:hover{opacity:1}
+.schedule-custom{width:100%;min-height:42px;border:1px dashed #cfd6de;border-radius:8px;padding:7px 8px;
+  resize:vertical;outline:0;background:#fff;font-size:12px}
+.schedule-custom:focus{border-color:#9db8f8}
+.schedule-sources{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.schedule-source-card{border:1px solid var(--line);border-radius:14px;background:#fff;padding:12px}
+.schedule-source-title{font-size:12px;font-weight:750;margin-bottom:9px}
+.schedule-source-list{display:flex;flex-wrap:wrap;gap:7px;min-height:36px}
+.schedule-hint{font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0 0}
+.schedule-actions{display:flex;justify-content:flex-end;margin-top:14px}
+@media(max-width:760px){
+  .schedule-board{min-width:700px}
+  .schedule-sources{grid-template-columns:1fr}
+}
+
 </style>
 </head>
 <body>
@@ -198,6 +232,10 @@ td input[type=text]:focus{background:var(--blue2)}
       <button class="menu-card" onclick="showSection('ordered')">
         <div class="menu-icon">📦</div>
         <div class="menu-title">Заказные позиции</div>
+      </button>
+      <button class="menu-card" onclick="showSection('schedule')">
+        <div class="menu-icon">🗓️</div>
+        <div class="menu-title">График</div>
       </button>
     </div>
   </div>
@@ -233,6 +271,45 @@ td input[type=text]:focus{background:var(--blue2)}
   </div>
 </section>
 
+<section id="schedule" class="section">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">🗓️ График</h2>
+      <div class="section-sub">Монтажи и доделки · кирпичики можно перетаскивать мышью</div>
+    </div>
+    <div class="section-actions">
+      <button class="btn" onclick="refreshSchedule()">↻ Обновить кирпичики</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-titlebar">Расписание монтажников</div>
+    <div class="schedule-wrap">
+      <div id="scheduleBoard" class="schedule-board"></div>
+    </div>
+  </div>
+
+  <div class="schedule-sources">
+    <div class="schedule-source-card">
+      <div class="schedule-source-title">🟩 Монтаж — из заказов</div>
+      <div id="scheduleMounting" class="schedule-source-list"></div>
+    </div>
+    <div class="schedule-source-card">
+      <div class="schedule-source-title">🟫 Доделки</div>
+      <div id="scheduleDodelki" class="schedule-source-list"></div>
+    </div>
+  </div>
+
+  <div class="schedule-hint">
+    Перетащите кирпичик в нужную ячейку. Внутри ячейки можно также написать свой текст.
+    Имена монтажников в первом столбце вписываются вручную. Расстановка и имена сохраняются в этом браузере.
+  </div>
+
+  <div class="schedule-actions">
+    <button class="btn btn-danger" onclick="clearSchedule()">Очистить</button>
+  </div>
+</section>
+
 <section id="ordered" class="section">
   <div class="section-head">
     <div><h2 class="section-title">📦 Заказные позиции</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div>
@@ -258,6 +335,156 @@ const KEY='sb_publishable_r-nKoe46FVG9AKyMDCQFJg_hTL6uws4';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 let ordersData=[], dodelkiRows=[], orderedRows=[];
 let refreshBusy=false, toastTimer=null;
+
+const SCHEDULE_KEY='unified_schedule_v1';
+const SCHEDULE_ROWS=20;
+const SCHEDULE_DAYS=['ПН','ВТ','СР','ЧТ','ПТ'];
+let scheduleState={names:Array(SCHEDULE_ROWS).fill(''),cells:{}};
+
+function loadScheduleState(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(SCHEDULE_KEY)||'null');
+    if(saved && Array.isArray(saved.names) && saved.cells){
+      scheduleState={
+        names:Array.from({length:SCHEDULE_ROWS},(_,i)=>String(saved.names[i]||'')),
+        cells:saved.cells||{}
+      };
+    }
+  }catch(e){}
+}
+function saveScheduleState(){
+  localStorage.setItem(SCHEDULE_KEY,JSON.stringify(scheduleState));
+}
+function scheduleCellKey(row,day){return row+'_'+day}
+function scheduleEntries(row,day){
+  return Array.isArray(scheduleState.cells[scheduleCellKey(row,day)]) ? scheduleState.cells[scheduleCellKey(row,day)] : [];
+}
+function setScheduleEntries(row,day,items){
+  scheduleState.cells[scheduleCellKey(row,day)]=items;
+  saveScheduleState();
+}
+function scheduleItemHTML(item,row,day){
+  const cls=item.type==='M'?'schedule-m':'schedule-d';
+  return `<div class="schedule-item ${cls}" draggable="true"
+      data-type="${esc(item.type)}" data-id="${esc(item.id)}"
+      ondragstart="scheduleDragStart(event)" title="Перетащить">
+      <span>${esc(item.number)} (${esc(item.type)})</span>
+      <button class="item-remove" onclick="event.stopPropagation();removeScheduleItem(${row},${day},'${esc(item.type)}','${esc(item.id)}')">×</button>
+    </div>`;
+}
+function renderSchedule(){
+  const board=document.getElementById('scheduleBoard');
+  if(!board)return;
+  let out='<div class="schedule-grid">';
+  out+='<div class="schedule-cell schedule-head">Монтажник</div>';
+  SCHEDULE_DAYS.forEach(d=>out+=`<div class="schedule-cell schedule-head">${d}</div>`);
+  for(let r=0;r<SCHEDULE_ROWS;r++){
+    out+=`<div class="schedule-cell schedule-name"><input value="${esc(scheduleState.names[r]||'')}" placeholder="${r+1}" onchange="setScheduleName(${r},this.value)"></div>`;
+    for(let d=0;d<5;d++){
+      const items=scheduleEntries(r,d);
+      out+=`<div class="schedule-cell schedule-drop" data-row="${r}" data-day="${d}"
+        ondragover="scheduleDragOver(event)" ondragleave="scheduleDragLeave(event)" ondrop="scheduleDrop(event)">
+        ${items.map(x=>scheduleItemHTML(x,r,d)).join('')}
+        <textarea class="schedule-custom" placeholder="Заметка…" onchange="setCustomText(${r},${d},this.value)">${esc((items.find(x=>x.type==='C')||{}).text||'')}</textarea>
+      </div>`;
+    }
+  }
+  out+='</div>';
+  board.innerHTML=out;
+}
+function setScheduleName(row,value){
+  scheduleState.names[row]=value; saveScheduleState();
+}
+function setCustomText(row,day,value){
+  const key=scheduleCellKey(row,day);
+  const arr=scheduleEntries(row,day).filter(x=>x.type!=='C');
+  if(value.trim()) arr.push({type:'C',id:'custom',number:'',text:value});
+  scheduleState.cells[key]=arr; saveScheduleState();
+}
+let scheduleDrag=null;
+function scheduleDragStart(e){
+  const el=e.currentTarget;
+  scheduleDrag={type:el.dataset.type,id:el.dataset.id};
+  e.dataTransfer.effectAllowed='move';
+  e.dataTransfer.setData('text/plain',JSON.stringify(scheduleDrag));
+}
+function scheduleDragOver(e){
+  e.preventDefault();
+  e.currentTarget.classList.add('drag-over');
+  if(e.dataTransfer)e.dataTransfer.dropEffect='move';
+}
+function scheduleDragLeave(e){e.currentTarget.classList.remove('drag-over')}
+function scheduleDrop(e){
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  let payload=scheduleDrag;
+  try{if(!payload && e.dataTransfer)payload=JSON.parse(e.dataTransfer.getData('text/plain'))}catch(x){}
+  if(!payload || payload.type==='C')return;
+  const row=Number(e.currentTarget.dataset.row), day=Number(e.currentTarget.dataset.day);
+  // Remove the same brick from every cell before adding it to the new location.
+  Object.keys(scheduleState.cells).forEach(k=>{
+    scheduleState.cells[k]=scheduleState.cells[k].filter(x=>!(x.type===payload.type && String(x.id)===String(payload.id)));
+  });
+  const arr=scheduleEntries(row,day).filter(x=>x.type!=='C');
+  arr.push({type:payload.type,id:payload.id,number:brickNumber(payload.type,payload.id)});
+  scheduleState.cells[scheduleCellKey(row,day)]=arr;
+  saveScheduleState();
+  renderSchedule();
+}
+function brickNumber(type,id){
+  if(type==='M'){
+    for(const p of ordersData) for(const r of p.rows) if(String(r.id)===String(id)) return r.number||'Без номера';
+  }else{
+    const r=dodelkiRows.find(x=>String(x.id)===String(id));
+    return r ? (r.order_number||'Без номера') : 'Без номера';
+  }
+  return 'Без номера';
+}
+function removeScheduleItem(row,day,type,id){
+  setScheduleEntries(row,day,scheduleEntries(row,day).filter(x=>!(x.type===type&&String(x.id)===String(id))));
+  renderSchedule();
+}
+function scheduleBricks(){
+  const mounting=[], fixes=[];
+  for(const p of ordersData){
+    for(const r of p.rows){
+      // User requested: not completed + LDSP + furniture.
+      if(!r.ready && r.ldsp && r.furniture){
+        mounting.push({type:'M',id:String(r.id),number:r.number||'Без номера',installer:r.installer||''});
+      }
+    }
+  }
+  for(const r of dodelkiRows){
+    if(!r.completed){
+      fixes.push({type:'D',id:String(r.id),number:r.order_number||'Без номера',installer:r.installer||''});
+    }
+  }
+  return {mounting,fixes};
+}
+function renderBrickSources(){
+  const s=scheduleBricks();
+  const used=new Set();
+  Object.values(scheduleState.cells).flat().forEach(x=>{if(x.type!=='C')used.add(x.type+':'+x.id)});
+  const mount=document.getElementById('scheduleMounting'), fix=document.getElementById('scheduleDodelki');
+  if(!mount||!fix)return;
+  mount.innerHTML=s.mounting.filter(x=>!used.has(x.type+':'+x.id)).map(x=>brickSourceHTML(x)).join('') || '<span class="schedule-hint">Нет доступных заказов</span>';
+  fix.innerHTML=s.fixes.filter(x=>!used.has(x.type+':'+x.id)).map(x=>brickSourceHTML(x)).join('') || '<span class="schedule-hint">Нет доступных доделок</span>';
+}
+function brickSourceHTML(x){
+  const cls=x.type==='M'?'schedule-m':'schedule-d';
+  return `<div class="schedule-item ${cls}" draggable="true" data-type="${x.type}" data-id="${esc(x.id)}" ondragstart="scheduleDragStart(event)" title="Перетащить в таблицу">
+    <span>${esc(x.number)} (${x.type})</span>
+  </div>`;
+}
+function renderScheduleAll(){renderSchedule();renderBrickSources()}
+function refreshSchedule(){renderScheduleAll();toast('Кирпичики обновлены')}
+function clearSchedule(){
+  if(!confirm('Очистить весь график? Имена монтажников и все записи тоже будут удалены.'))return;
+  scheduleState={names:Array(SCHEDULE_ROWS).fill(''),cells:{}};
+  saveScheduleState();
+  renderScheduleAll();
+  toast('График очищен');
+}
 
 async function api(path,opt={}){
   const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers:{...H,...(opt.headers||{})}});
@@ -285,7 +512,7 @@ async function loadAll(silent=false){
       facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready
     }))}));
     dodelkiRows=dr; orderedRows=op;
-    renderOrders();renderDodelki();renderOrdered();setStatus('● Онлайн',true);
+    renderOrders();renderDodelki();renderOrdered();renderScheduleAll();setStatus('● Онлайн',true);
   }catch(e){
     setStatus('Ошибка соединения',false);
     if(!silent) toast('Не удалось загрузить данные');
@@ -483,7 +710,8 @@ try{
 const sectionTitles = {
   orders: 'Заказы',
   dodelki: 'Доделки',
-  ordered: 'Заказные позиции'
+  ordered: 'Заказные позиции',
+  schedule: 'График'
 };
 
 function showHome(push=true){
@@ -516,6 +744,7 @@ window.addEventListener('popstate', routeFromHash);
 window.addEventListener('hashchange', routeFromHash);
 
 document.body.classList.add('view-home');
+loadScheduleState();
 loadAll();
 routeFromHash();
 </script>
