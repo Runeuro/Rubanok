@@ -21,6 +21,9 @@ button{border:0;cursor:pointer}
 a{color:inherit}
 .hidden{display:none!important}
 #app{min-height:100vh}
+.section{display:none}
+body.view-section .site-header{display:block}
+body.view-home .site-header{display:none}
 
 /* ---------- Общая шапка ---------- */
 .site-header{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.93);
@@ -45,17 +48,14 @@ a{color:inherit}
 .cover-card{width:min(1080px,100%);padding:34px;border:1px solid rgba(210,215,222,.9);border-radius:28px;
   background:rgba(255,255,255,.86);box-shadow:0 25px 70px rgba(31,41,55,.10)}
 .cover-top{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:28px}
-.cover-kicker{font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:#667085;font-weight:750}
-.cover-title{font-size:clamp(32px,6vw,58px);line-height:1.02;margin:8px 0 12px;letter-spacing:-.04em}
-.cover-desc{max-width:700px;color:#667085;line-height:1.55;font-size:15px}
-.cover-badge{padding:10px 12px;border-radius:14px;background:#f1f4f8;color:#4b5563;font-size:12px;white-space:nowrap}
+
 .menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-.menu-card{display:block;text-decoration:none;padding:22px;border-radius:20px;border:1px solid var(--line);
+.menu-card{display:block;width:100%;text-align:left;font:inherit;padding:22px;border-radius:20px;border:1px solid var(--line);
   background:linear-gradient(145deg,#fff,#f7f8fa);transition:.2s;min-height:170px}
 .menu-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:#cfd6df}
 .menu-icon{font-size:28px;margin-bottom:28px}.menu-title{font-size:20px;font-weight:750}
 .menu-note{font-size:12px;color:var(--muted);margin-top:7px;line-height:1.45}
-.cover-foot{margin-top:22px;color:#8a919c;font-size:11px}
+
 
 /* ---------- Разделы ---------- */
 .section{scroll-margin-top:84px;margin-bottom:50px}
@@ -142,10 +142,9 @@ td input[type=text]:focus{background:var(--blue2)}
   .header-inner{padding:9px 10px}.brand-mark{width:36px;height:36px}.brand-title{font-size:15px}
   .brand-sub{display:none}.header-actions .status{display:none}.header-actions .btn{padding:8px 10px}
   .container{padding:14px 9px 45px}
-  .cover{padding:14px 9px;align-items:center}.cover-card{padding:24px 18px;border-radius:22px}
-  .cover-top{display:block}.cover-badge{display:inline-block;margin-top:10px}.cover-title{font-size:39px}
-  .menu-grid{grid-template-columns:1fr;gap:10px}.menu-card{min-height:0;padding:18px}
-  .menu-icon{margin-bottom:18px}.menu-title{font-size:18px}
+  .cover{padding:14px 9px;align-items:center}.cover-card{padding:18px 12px;border-radius:22px}
+  .menu-grid{grid-template-columns:1fr;gap:12px}.menu-card{min-height:0;padding:24px 18px}
+  .menu-icon{margin-bottom:12px;font-size:30px}.menu-title{font-size:20px}
   .section{scroll-margin-top:68px}.section-head{align-items:flex-start}
   .section-title{font-size:22px}.section-actions{width:100%}.section-head{display:block}
   .section-actions{margin-top:9px;justify-content:flex-start}
@@ -174,53 +173,44 @@ td input[type=text]:focus{background:var(--blue2)}
 <div id="app">
 <header class="site-header">
   <div class="header-inner">
-    <a href="#cover" class="brand" style="text-decoration:none">
+    <button class="btn btn-icon" onclick="showHome()" title="Вернуться на главную">←</button>
+    <div class="brand">
       <div class="brand-mark">▦</div>
-      <div class="brand-text"><div class="brand-title">Рабочая панель</div><div class="brand-sub">единая страница · общая база</div></div>
-    </a>
+      <div class="brand-text"><div id="pageTitle" class="brand-title">Заказы</div><div class="brand-sub">общая база · онлайн</div></div>
+    </div>
     <div class="header-actions">
       <span id="globalStatus" class="status">Подключение…</span>
-      <a class="btn btn-icon" href="#cover" title="Оглавление">⌂</a>
     </div>
   </div>
 </header>
 
 <section id="cover" class="cover">
   <div class="cover-card">
-    <div class="cover-top">
-      <div>
-        <div class="cover-kicker">Единая рабочая панель</div>
-        <h1 class="cover-title">Заказы.<br>Доделки.<br>Позиции.</h1>
-        <div class="cover-desc">Все три рабочих раздела собраны на одной странице и продолжают работать с той же онлайн-базой. На телефоне таблицы превращаются в удобные карточки для чтения и редактирования.</div>
-      </div>
-      <div class="cover-badge">● синхронизация онлайн</div>
-    </div>
     <div class="menu-grid">
-      <a class="menu-card" href="#orders">
-        <div class="menu-icon">📋</div><div class="menu-title">Заказы</div>
-        <div class="menu-note">Периоды, строки заказов, материалы, сборщики и монтажники.</div>
-      </a>
-      <a class="menu-card" href="#dodelki">
-        <div class="menu-icon">🔧</div><div class="menu-title">Доделки</div>
-        <div class="menu-note">Невыполненные сверху, выполненные автоматически уходят вниз.</div>
-      </a>
-      <a class="menu-card" href="#ordered">
-        <div class="menu-icon">📦</div><div class="menu-title">Заказные позиции</div>
-        <div class="menu-note">Описание позиции и два статуса: заказано и в цеху.</div>
-      </a>
+      <button class="menu-card" onclick="showSection('orders')">
+        <div class="menu-icon">📋</div>
+        <div class="menu-title">Заказы</div>
+      </button>
+      <button class="menu-card" onclick="showSection('dodelki')">
+        <div class="menu-icon">🔧</div>
+        <div class="menu-title">Доделки</div>
+      </button>
+      <button class="menu-card" onclick="showSection('ordered')">
+        <div class="menu-icon">📦</div>
+        <div class="menu-title">Заказные позиции</div>
+      </button>
     </div>
-    <div class="cover-foot">Подсказка: на мобильном нажимайте на заголовок периода, чтобы свернуть/развернуть его.</div>
   </div>
 </section>
 
-<main class="container">
+<main id="sections" class="container">
 
 <section id="orders" class="section">
   <div class="section-head">
     <div><h2 class="section-title">📋 Заказы</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div>
     <div class="section-actions">
       <button class="btn btn-primary" onclick="addPeriod()">＋ Период</button>
-      <a class="back-top" href="#cover">↑ Оглавление</a>
+     
     </div>
   </div>
   <div class="search"><input id="orderSearch" placeholder="Поиск по адресу, номеру заказа или изделию…" oninput="renderOrders()"><button class="btn" onclick="clearSearch('orderSearch',renderOrders)">Сбросить</button></div>
@@ -232,7 +222,7 @@ td input[type=text]:focus{background:var(--blue2)}
     <div><h2 class="section-title">🔧 Доделки</h2><div class="section-sub">Выполненные позиции автоматически уходят вниз</div></div>
     <div class="section-actions">
       <button class="btn btn-primary" onclick="addDodelka()">＋ Строка</button>
-      <a class="back-top" href="#cover">↑ Оглавление</a>
+     
     </div>
   </div>
   <div class="search"><input id="dodelkiSearch" placeholder="Поиск по номеру, адресу, описанию или монтажнику…" oninput="renderDodelki()"><button class="btn" onclick="clearSearch('dodelkiSearch',renderDodelki)">Сбросить</button></div>
@@ -248,7 +238,7 @@ td input[type=text]:focus{background:var(--blue2)}
     <div><h2 class="section-title">📦 Заказные позиции</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div>
     <div class="section-actions">
       <button class="btn btn-primary" onclick="addOrdered()">＋ Строка</button>
-      <a class="back-top" href="#cover">↑ Оглавление</a>
+     
     </div>
   </div>
   <div class="search"><input id="orderedSearch" placeholder="Поиск по номеру или тексту…" oninput="renderOrdered()"><button class="btn" onclick="clearSearch('orderedSearch',renderOrdered)">Сбросить</button></div>
@@ -490,8 +480,44 @@ try{
   realtime.onmessage=async ev=>{try{const msg=JSON.parse(ev.data);if(msg.event==='postgres_changes'&&!isEditing())await loadAll(true)}catch(e){}};
 }catch(e){}
 
-/* Загружаем всё один раз при старте. */
+const sectionTitles = {
+  orders: 'Заказы',
+  dodelki: 'Доделки',
+  ordered: 'Заказные позиции'
+};
+
+function showHome(push=true){
+  document.body.classList.remove('view-section');
+  document.body.classList.add('view-home');
+  document.querySelectorAll('.section').forEach(s => s.style.display='none');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(push && location.hash) history.pushState({},'',location.pathname+location.search);
+}
+
+function showSection(id, push=true){
+  const section=document.getElementById(id);
+  if(!section) return;
+  document.body.classList.remove('view-home');
+  document.body.classList.add('view-section');
+  document.querySelectorAll('.section').forEach(s => s.style.display='none');
+  section.style.display='block';
+  document.getElementById('pageTitle').textContent=sectionTitles[id] || '';
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(push) history.pushState({},'', '#'+id);
+}
+
+function routeFromHash(){
+  const id=location.hash.replace('#','');
+  if(sectionTitles[id]) showSection(id,false);
+  else showHome(false);
+}
+
+window.addEventListener('popstate', routeFromHash);
+window.addEventListener('hashchange', routeFromHash);
+
+document.body.classList.add('view-home');
 loadAll();
+routeFromHash();
 </script>
 </body>
 </html>
