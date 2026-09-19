@@ -4,301 +4,41 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#121212">
-<title>Рабочая панель — Заказы, Доделки, Заказные позиции</title>
+<title>Рубанок — рабочая панель</title>
 <style>
-:root{
-  --bg:#121212;
-  --panel:#1c1c1e;
-  --panel2:#242426;
-  --text:#e8e8ea;
-  --muted:#8e8e93;
-  --line:#2e2e30;
-  --blue:#ff8c1a;
-  --blue2:#3a2a12;
-  --green:#2ea043;
-  --green-bg:#12351c;
-  --red:#ff5c5c;
-  --redbg:#3a1a1a;
-  --orange:#ff8c1a;
-  --orange-bg:#3a2a12;
-  --orange-hover:#ffa64d;
-  --shadow:0 10px 30px rgba(0,0,0,.45);
-  --radius:16px;
-}
-*{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+:root{--bg:#121212;--panel:#1c1c1e;--panel2:#242426;--text:#e8e8ea;--muted:#8e8e93;--line:#2e2e30;--orange:#ff8c1a;--orange2:#ffa64d;--green:#2ea043;--red:#ff5c5c;--shadow:0 10px 30px rgba(0,0,0,.35);--radius:16px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
 button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
-
-.site-header{position:sticky;top:0;z-index:100;background:rgba(18,18,18,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.header-inner{max-width:1500px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
-.brand{display:flex;align-items:center;gap:10px}
-.brand-mark{width:40px;height:40px;border-radius:12px;background:var(--orange);color:#121212;display:grid;place-items:center;font-size:20px;font-weight:800}
-.brand-title{font-weight:750;font-size:17px;color:#fff}
-.brand-sub{font-size:11px;color:var(--muted);margin-top:2px}
-.header-actions{display:flex;align-items:center;gap:8px}
-.status{font-size:12px;color:var(--muted)}
-.online{color:#4ade80}.offline{color:var(--red)}
-
-.btn{padding:9px 13px;border-radius:10px;background:var(--panel2);color:var(--text);font-weight:600;transition:.15s;border:1px solid var(--line)}
-.btn:hover{background:#303032}
-.btn-primary{background:var(--orange);color:#121212;border-color:var(--orange)}
-.btn-primary:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
-.btn-danger{background:var(--redbg);color:var(--red);border-color:#5a2a2a}
-.btn-danger:hover{background:#4a2020}
-.btn-icon{padding:8px 10px;min-width:40px}
-.btn-sm{padding:6px 10px;font-size:12px;border-radius:9px}
-
-.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px;position:relative}
-.cover::before{
-  content:'';position:fixed;inset:0;z-index:-1;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,140,26,.18), transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(80,120,255,.14), transparent 50%),
-    radial-gradient(circle at 50% 90%, rgba(255,90,140,.12), transparent 50%),
-    #0d0d0f;
-}
-.cover-card{
-  width:min(1080px,100%);
-  padding:34px;border-radius:28px;position:relative;
-  background:rgba(30,30,34,.42);
-  backdrop-filter:blur(28px) saturate(180%);
-  -webkit-backdrop-filter:blur(28px) saturate(180%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 25px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.04);
-  overflow:hidden;
-}
-.cover-card::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
-  background:linear-gradient(135deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.05) 100%);
-}
-.cover-card::after{
-  content:'';position:absolute;top:-40%;left:-20%;width:60%;height:180%;
-  background:radial-gradient(ellipse at center, rgba(255,255,255,.10), transparent 60%);
-  pointer-events:none;transform:rotate(15deg);
-}
-.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;z-index:1}
-.menu-card{
-  display:block;width:100%;text-align:left;padding:22px;border-radius:20px;
-  min-height:170px;position:relative;color:var(--text);
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(20px) saturate(160%);
-  -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(255,255,255,.04);
-  transition:transform .2s, box-shadow .25s, background .25s, border-color .25s;
-  overflow:hidden;
-}
-.menu-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:50%;
-  background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,0));
-  pointer-events:none;border-radius:inherit;
-}
-.menu-card:hover{
-  transform:translateY(-3px);background:rgba(255,255,255,.10);
-  border-color:rgba(255,140,26,.55);
-  box-shadow:0 18px 45px rgba(0,0,0,.5),0 0 0 1px rgba(255,140,26,.25),inset 0 1px 0 rgba(255,255,255,.28);
-}
-.menu-icon{font-size:28px;margin-bottom:28px;position:relative;z-index:1}
-.menu-title{font-size:20px;font-weight:750;color:#fff;position:relative;z-index:1}
-.menu-note{font-size:12px;color:var(--muted);margin-top:7px;position:relative;z-index:1}
-
-.container{max-width:1500px;margin:auto;padding:20px 16px 60px}
-.section{display:none;scroll-margin-top:84px;margin-bottom:50px}
-.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
-.section-title{margin:0;font-size:26px;letter-spacing:-.025em;color:#fff}
-.section-sub{font-size:12px;color:var(--muted);margin-top:4px}
-.section-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
-.search{display:flex;gap:8px;margin:10px 0 12px}
-.search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:var(--panel);color:var(--text);outline:0}
-.search input:focus{border-color:var(--orange)}
-.search input::placeholder{color:#5a5a5e}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.25)}
-.table-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;table-layout:fixed}
-th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
-th:last-child,td:last-child{border-right:0}
-th{background:var(--panel2);padding:10px 8px;font-size:12px;color:var(--muted);text-align:left;position:sticky;top:0;z-index:2}
-td{padding:0;height:47px;background:var(--panel)}
-td input[type=text]{width:100%;height:46px;border:0;background:transparent;padding:8px 10px;outline:0;color:var(--text)}
-td input[type=text]:focus{background:var(--blue2)}
-.center{text-align:center}
-.empty{text-align:center!important;color:var(--muted);padding:30px!important}
-
-.periods-wrap{display:flex;flex-direction:column;gap:10px}
-.periods-chips{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 4px 0}
-.period-chip{
-  display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;
-  background:var(--panel);border:1px solid var(--line);color:var(--text);
-  font-weight:650;font-size:13px;cursor:pointer;transition:.18s;white-space:nowrap;
-  max-width:100%;overflow:hidden;text-overflow:ellipsis;
-}
-.period-chip:hover{border-color:var(--orange);background:var(--panel2);color:var(--orange)}
-.period-chip:active{transform:scale(.97)}
-
-.period{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-.period-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
-.period-toggle{flex:1;text-align:left;background:transparent;padding:5px;border-radius:9px;display:flex;align-items:center;gap:9px;color:var(--text)}
-.chevron{width:26px;height:26px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;transition:transform .18s;color:var(--orange)}
-.period.open .chevron{transform:rotate(90deg)}
-.period-title-input{font-weight:750;font-size:15px;border:1px solid transparent;border-radius:7px;padding:5px 7px;min-width:0;max-width:100%;background:transparent;color:#fff}
-.period-title-input:focus{border-color:var(--orange);background:var(--panel2);outline:0}
-.period-meta{font-size:11px;color:var(--muted);white-space:nowrap}
-.period-tools{display:flex;gap:6px;align-items:center}
-
-.col-num{width:120px}.col-product{width:95px}.col-worker{width:105px}.col-note{width:25%}
-.material,.ready-btn{cursor:pointer}
-.ready-btn{width:27px;height:27px;border-radius:50%;padding:0;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-weight:700}
-.ready-btn.on{background:var(--orange);border-color:var(--orange);color:#121212}
-.material{width:23px;height:23px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);padding:0}
-.material.on{background:var(--orange);border-color:var(--orange)}
-.material.on:after{content:"✓";color:#121212;font-weight:700}
-.delete{background:none;color:#5a5a5e;padding:7px;font-size:20px;transition:.15s}
-.delete:hover{color:var(--red)}
-
-.mobile-list{display:none}
-.m-row{border-bottom:1px solid var(--line);padding:13px}
-.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.m-field{min-width:0}.m-field.wide{grid-column:1/-1}
-.m-label{font-size:10px;color:var(--muted);margin:0 0 3px 2px;text-transform:uppercase;letter-spacing:.04em}
-.m-input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:9px 10px;outline:0}
-.m-input:focus{border-color:var(--orange)}
-.m-checks{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
-.m-check{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:8px 4px;text-align:center;font-size:10px;color:var(--muted);min-height:50px}
-.m-actions{display:flex;justify-content:space-between;align-items:center;margin-top:9px}
-.m-ready{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}
-
-.big-check,.done-check{width:22px;height:22px;cursor:pointer;accent-color:var(--orange)}
-.done-check{appearance:none;border:2px solid var(--line);border-radius:7px;background:var(--panel2);position:relative}
-.done-check:checked{background:var(--orange);border-color:var(--orange)}
-.done-check:checked:after{content:"✓";position:absolute;color:#121212;font-weight:800;font-size:16px;left:3px;top:-2px}
-
-.completed td{background:#18181a}
-.completed td input{color:#6a6a70}
-.completed.m-row{background:#18181a}
-.completed.m-row input{color:#6a6a70}
-
-.ordered-table{min-width:650px}.dodelki-table{min-width:850px}
-
-.done-block{margin-top:14px}
-.done-toggle{
-  width:100%;display:flex;align-items:center;gap:10px;
-  padding:11px 14px;background:var(--panel);border:1px solid var(--line);
-  border-radius:14px;color:var(--muted);font-weight:650;font-size:13px;transition:.15s;
-}
-.done-toggle:hover{color:var(--orange);border-color:var(--orange)}
-.done-toggle .chevron{background:var(--panel2)}
-.done-block.open .done-toggle .chevron{transform:rotate(90deg)}
-.done-body{display:none;margin-top:8px}
-.done-block.open .done-body{display:block}
-
-/* === ГРАФИК === */
-.schedule-board{min-width:900px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
-.schedule-grid{display:grid;grid-template-columns:180px repeat(5,minmax(155px,1fr))}
-.schedule-cell{min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
-.schedule-cell:last-child{border-right:0}
-.schedule-head{min-height:44px;background:var(--panel2);font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--orange)}
-.schedule-name{background:#18181a;font-weight:700;display:flex;align-items:center;padding:12px 14px;font-size:13px;color:#fff;min-height:130px}
-.schedule-input{
-  width:100%;height:100%;min-height:114px;
-  border:1px dashed var(--line);border-radius:9px;
-  background:var(--panel2);color:var(--text);
-  padding:8px 9px;outline:0;resize:vertical;
-  font-size:12px;line-height:1.4;
-}
-.schedule-input:focus{border-color:var(--orange);border-style:solid}
-.schedule-input::placeholder{color:#5a5a5e}
-
-/* === КОМПАКТНЫЙ СПИСОК ЗАКАЗОВ === */
-.schedule-pool{
-  margin:0 0 14px;
-  border:1px solid var(--line);border-radius:14px;
-  background:var(--panel);overflow:hidden;
-}
-.schedule-pool-head{
-  padding:10px 14px;border-bottom:1px solid var(--line);
-  font-weight:750;font-size:13px;color:var(--orange);
-}
-.schedule-pool-body{padding:10px 12px}
-.schedule-pool-section + .schedule-pool-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
-.schedule-pool-title{
-  font-size:11px;font-weight:750;color:var(--muted);
-  margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;
-  display:flex;align-items:center;gap:6px;
-}
-.schedule-pool-title .count{
-  background:var(--panel2);color:var(--orange);
-  padding:1px 7px;border-radius:999px;font-size:10px;font-weight:800;
-}
-.schedule-pool-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:6px;
-}
-.schedule-pool-item{
-  display:flex;align-items:flex-start;gap:7px;
-  padding:6px 8px;border-radius:8px;
-  background:var(--panel2);border:1px solid var(--line);
-  font-size:11px;line-height:1.3;
-  min-width:0;
-}
-.schedule-pool-item .tag{
-  flex-shrink:0;width:18px;height:18px;border-radius:5px;
-  display:grid;place-items:center;font-weight:800;font-size:9px;
-  background:var(--orange);color:#121212;margin-top:1px;
-}
-.schedule-pool-item .tag.d{background:#c8853a}
-.schedule-pool-item .main{flex:1;min-width:0;overflow:hidden}
-.schedule-pool-item .line1{
-  display:flex;align-items:baseline;gap:5px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.schedule-pool-item .num{font-weight:750;color:#fff;flex-shrink:0}
-.schedule-pool-item .worker{color:var(--orange);font-weight:650;font-size:10px;overflow:hidden;text-overflow:ellipsis}
-.schedule-pool-item .meta{
-  color:var(--muted);font-size:10px;margin-top:1px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.schedule-pool-empty{font-size:11px;color:var(--muted);padding:6px 0}
-
-.schedule-hint{font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0}
-.schedule-actions{display:flex;justify-content:flex-end;margin-top:14px}
-
+body.readonly .edit-control{pointer-events:none;opacity:.48}body.readonly .section input:not(.search-input),body.readonly .section textarea{pointer-events:none;opacity:.72}
+.site-header{position:sticky;top:0;z-index:100;background:rgba(18,18,18,.94);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.header-inner{max-width:1500px;margin:auto;padding:10px 16px;display:flex;align-items:center;gap:12px}.brand{display:flex;align-items:center;gap:10px;flex:1}
+.brand-mark{width:40px;height:40px;border-radius:12px;background:var(--orange);color:#121212;display:grid;place-items:center;font-weight:800;font-size:20px}
+.brand-title{font-weight:750;font-size:17px;color:#fff}.brand-sub{font-size:11px;color:var(--muted);margin-top:2px}.header-actions{display:flex;align-items:center;gap:8px}.status{font-size:12px;color:var(--muted)}.online{color:#4ade80}.offline{color:var(--red)}
+.btn{padding:9px 13px;border-radius:10px;background:var(--panel2);color:var(--text);font-weight:600;border:1px solid var(--line);transition:.15s}.btn:hover{background:#303032}.btn-primary{background:var(--orange);color:#121212;border-color:var(--orange)}.btn-primary:hover{background:var(--orange2)}.btn-danger{background:#3a1a1a;color:var(--red);border-color:#5a2a2a}.btn-sm{padding:6px 10px;font-size:12px;border-radius:9px}.btn-icon{padding:8px 10px;min-width:40px}
+.cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px}.cover-card{width:min(1080px,100%);padding:34px;border-radius:28px;background:rgba(30,30,34,.5);backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,.1);box-shadow:0 25px 70px rgba(0,0,0,.55)}
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}.menu-card{display:block;width:100%;text-align:left;padding:22px;border-radius:20px;min-height:170px;color:var(--text);background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);transition:.2s}.menu-card:hover{transform:translateY(-3px);border-color:rgba(255,140,26,.55);background:rgba(255,255,255,.1)}.menu-icon{font-size:28px;margin-bottom:28px}.menu-title{font-size:20px;font-weight:750;color:#fff}
+.container{max-width:1500px;margin:auto;padding:20px 16px 60px}.section{display:none;margin-bottom:50px}.section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}.section-title{margin:0;font-size:26px;color:#fff}.section-sub{font-size:12px;color:var(--muted);margin-top:4px}.section-actions{display:flex;gap:7px;flex-wrap:wrap;justify-content:flex-end}
+.search{display:flex;gap:8px;margin:10px 0 12px}.search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:var(--panel);color:var(--text);outline:0}.search input:focus{border-color:var(--orange)}.search-input{font-size:inherit}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.25)}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line)}th:last-child,td:last-child{border-right:0}th{background:var(--panel2);padding:10px 8px;font-size:12px;color:var(--muted);text-align:left}td{padding:0;height:47px;background:var(--panel)}td input[type=text]{width:100%;height:46px;border:0;background:transparent;padding:8px 10px;outline:0;color:var(--text)}td input[type=text]:focus{background:#3a2a12}.center{text-align:center}.empty{text-align:center!important;color:var(--muted);padding:30px!important}
+.periods-wrap{display:flex;flex-direction:column;gap:10px}.periods-chips{display:flex;flex-wrap:wrap;gap:8px}.period-chip{display:inline-flex;align-items:center;padding:8px 14px;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--text);font-weight:650;font-size:13px;cursor:pointer}.period-chip:hover{border-color:var(--orange);color:var(--orange)}
+.period{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}.period-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}.period-toggle{flex:1;text-align:left;background:transparent;padding:5px;border-radius:9px;display:flex;align-items:center;gap:9px;color:var(--text)}.chevron{width:26px;height:26px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;color:var(--orange)}.period-title-input{font-weight:750;font-size:15px;border:1px solid transparent;border-radius:7px;padding:5px 7px;min-width:0;max-width:100%;background:transparent;color:#fff}.period-meta{font-size:11px;color:var(--muted);white-space:nowrap}.period-tools{display:flex;gap:6px}
+.col-num{width:120px}.col-product{width:105px}.col-worker{width:105px}.col-note{width:25%}.ready-btn{width:27px;height:27px;border-radius:50%;padding:0;border:1px solid var(--line);background:var(--panel2);color:var(--muted);font-weight:700}.ready-btn.on{background:var(--orange);border-color:var(--orange);color:#121212}.material{width:23px;height:23px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);padding:0}.material.on{background:var(--orange);border-color:var(--orange)}.material.on:after{content:"✓";color:#121212;font-weight:700}.delete{background:none;color:#5a5a5e;padding:7px;font-size:20px}.delete:hover{color:var(--red)}
+.mobile-list{display:none}.m-row{border-bottom:1px solid var(--line);padding:13px}.m-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.m-field{min-width:0}.m-field.wide{grid-column:1/-1}.m-label{font-size:10px;color:var(--muted);margin:0 0 3px 2px;text-transform:uppercase}.m-input{width:100%;min-height:42px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:9px 10px;outline:0}.m-checks{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}.m-check{border:1px solid var(--line);background:var(--panel2);border-radius:9px;padding:8px 4px;text-align:center;font-size:10px;color:var(--muted);min-height:50px}.m-actions{display:flex;justify-content:space-between;align-items:center;margin-top:9px}.m-ready{display:flex;align-items:center;gap:7px;font-size:11px;color:var(--muted)}.big-check{width:22px;height:22px;cursor:pointer;accent-color:var(--orange)}
+.completed td,.completed.m-row{background:#18181a}.completed td input,.completed.m-row input{color:#6a6a70}
+.done-block{margin-top:14px}.done-toggle{width:100%;display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--panel);border:1px solid var(--line);border-radius:14px;color:var(--muted);font-weight:650;font-size:13px}.done-body{display:none;margin-top:8px}.done-block.open .done-body{display:block}
+.schedule-board{min-width:900px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}.schedule-grid{display:grid;grid-template-columns:180px repeat(5,minmax(155px,1fr))}.schedule-cell{min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px}.schedule-head{min-height:44px;background:var(--panel2);font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--orange)}.schedule-name{background:#18181a;font-weight:700;display:flex;align-items:center;padding:12px 14px;font-size:13px}.schedule-input{width:100%;height:100%;min-height:114px;border:1px dashed var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:8px 9px;outline:0;resize:vertical;font-size:12px}.schedule-input:focus{border-color:var(--orange);border-style:solid}
+.schedule-pool{margin:0 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}.schedule-pool-head{padding:10px 14px;border-bottom:1px solid var(--line);font-weight:750;font-size:13px;color:var(--orange)}.schedule-pool-body{padding:10px 12px}.schedule-pool-section+.schedule-pool-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.schedule-pool-title{font-size:11px;font-weight:750;color:var(--muted);margin-bottom:8px;text-transform:uppercase}.schedule-pool-title .count{background:var(--panel2);color:var(--orange);padding:1px 7px;border-radius:999px;font-size:10px}.schedule-pool-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}.schedule-pool-item{display:flex;align-items:flex-start;gap:7px;padding:6px 8px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);font-size:11px;line-height:1.3;min-width:0}.schedule-pool-item .tag{flex-shrink:0;width:18px;height:18px;border-radius:5px;display:grid;place-items:center;font-weight:800;font-size:9px;background:var(--orange);color:#121212}.schedule-pool-item .tag.d{background:#c8853a}.schedule-pool-item .main{flex:1;min-width:0;overflow:hidden}.schedule-pool-item .line1{display:flex;gap:5px;white-space:nowrap;overflow:hidden}.schedule-pool-item .num{font-weight:750;color:#fff}.schedule-pool-item .worker{color:var(--orange);font-weight:650;font-size:10px;overflow:hidden;text-overflow:ellipsis}.schedule-pool-item .meta{color:var(--muted);font-size:10px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .toast{position:fixed;right:16px;bottom:16px;z-index:300;background:var(--orange);color:#121212;padding:11px 14px;border-radius:11px;box-shadow:0 12px 30px rgba(0,0,0,.5);font-size:12px;font-weight:600;max-width:min(360px,calc(100vw - 32px))}
-
-.section-titlebar{padding:11px 13px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
-
-@media(max-width:760px){
-  .header-inner{padding:9px 10px}
-  .brand-mark{width:36px;height:36px}
-  .brand-title{font-size:15px}
-  .brand-sub{display:none}
-  .header-actions .status{display:none}
-  .container{padding:14px 9px 45px}
-  .cover{padding:14px 9px}
-  .cover-card{padding:18px 12px;border-radius:22px}
-  .menu-grid{grid-template-columns:1fr;gap:12px}
-  .menu-card{min-height:0;padding:24px 18px}
-  .menu-icon{margin-bottom:12px}
-  .section-head{display:block}
-  .section-title{font-size:22px}
-  .section-actions{margin-top:9px;justify-content:flex-start}
-  .search{position:sticky;top:57px;z-index:20;background:rgba(18,18,18,.94);padding:7px 0}
-  .search input{font-size:16px;min-height:42px}
-  .search .btn{min-height:42px}
-  .table-wrap.desktop-table{display:none}
-  .mobile-list{display:block}
-  .schedule-pool-list{grid-template-columns:1fr}
-  .schedule-board{min-width:820px}
-}
+@media(max-width:760px){.header-inner{padding:9px 10px}.brand-mark{width:36px;height:36px}.brand-title{font-size:15px}.brand-sub,.header-actions .status{display:none}.container{padding:14px 9px 45px}.cover{padding:14px 9px}.cover-card{padding:18px 12px;border-radius:22px}.menu-grid{grid-template-columns:1fr;gap:12px}.menu-card{min-height:0;padding:24px 18px}.menu-icon{margin-bottom:12px}.section-head{display:block}.section-title{font-size:22px}.section-actions{margin-top:9px;justify-content:flex-start}.search{position:sticky;top:57px;z-index:20;background:rgba(18,18,18,.94);padding:7px 0}.search input{font-size:16px;min-height:42px}.search .btn{min-height:42px}.table-wrap.desktop-table{display:none}.mobile-list{display:block}.schedule-pool-list{grid-template-columns:1fr}.schedule-board{min-width:820px}}
 @media(min-width:761px){.mobile-list{display:none!important}}
 </style>
 </head>
-<body>
+<body class="readonly">
 <header id="siteHeader" class="site-header" style="display:none">
  <div class="header-inner">
   <button class="btn btn-icon" onclick="showHome()" title="На главную">←</button>
   <div class="brand"><div class="brand-mark">▦</div><div><div id="pageTitle" class="brand-title">Заказы</div><div class="brand-sub">общая база · онлайн</div></div></div>
-  <div class="header-actions"><span id="globalStatus" class="status">Подключение…</span></div>
+  <div class="header-actions"><span id="globalStatus" class="status">Подключение…</span><button id="editBtn" class="btn btn-sm" onclick="requestEditAccess()">🔒 Редактировать</button></div>
  </div>
 </header>
 <section id="cover" class="cover"><div class="cover-card"><div class="menu-grid">
@@ -307,72 +47,42 @@ td input[type=text]:focus{background:var(--blue2)}
  <button class="menu-card" onclick="showSection('ordered')"><div class="menu-icon">📦</div><div class="menu-title">Заказные позиции</div></button>
  <button class="menu-card" onclick="showSection('schedule')"><div class="menu-icon">🗓️</div><div class="menu-title">График</div></button>
 </div></div></section>
-
 <main class="container">
 <section id="orders" class="section">
- <div class="section-head"><div><h2 class="section-title">📋 Заказы</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div><div class="section-actions"><button class="btn btn-primary" onclick="addPeriod()">＋ Период</button></div></div>
- <div class="search"><input id="orderSearch" placeholder="Поиск по адресу, номеру заказа или изделию…" oninput="renderOrders()"><button class="btn" onclick="clearSearch('orderSearch',renderOrders)">Сбросить</button></div><div id="ordersApp"></div>
+ <div class="section-head"><div><h2 class="section-title">📋 Заказы</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div><div class="section-actions"><button class="btn btn-primary edit-control" onclick="addPeriod()">＋ Период</button></div></div>
+ <div class="search"><input class="search-input" id="orderSearch" placeholder="Поиск по адресу, номеру заказа или изделию…" oninput="renderOrders()"><button class="btn" onclick="clearSearch('orderSearch',renderOrders)">Сбросить</button></div><div id="ordersApp"></div>
 </section>
-
 <section id="dodelki" class="section">
- <div class="section-head"><div><h2 class="section-title">🔧 Доделки</h2><div class="section-sub">В работе — сверху · выполненные — в отдельной таблице снизу</div></div><div class="section-actions"><button class="btn btn-primary" onclick="addDodelka()">＋ Строка</button></div></div>
- <div class="search"><input id="dodelkiSearch" placeholder="Поиск по номеру, адресу, описанию или монтажнику…" oninput="renderDodelki()"><button class="btn" onclick="clearSearch('dodelkiSearch',renderDodelki)">Сбросить</button></div>
- <div class="card"><div class="section-titlebar">В работе</div><div id="dodelkiDesktop" class="table-wrap desktop-table"></div><div id="dodelkiMobile" class="mobile-list"></div></div>
- <div class="done-block" id="dodelkiDoneBlock">
-   <button class="done-toggle" onclick="toggleDone('dodelkiDoneBlock')">
-     <span class="chevron">›</span>
-     <span>Выполнено · <span id="dodelkiDoneCount">0</span></span>
-   </button>
-   <div class="done-body">
-     <div class="card"><div id="dodelkiDoneDesktop" class="table-wrap desktop-table"></div><div id="dodelkiDoneMobile" class="mobile-list"></div></div>
-   </div>
- </div>
+ <div class="section-head"><div><h2 class="section-title">🔧 Доделки</h2><div class="section-sub">В работе — сверху · выполненные — в отдельной таблице снизу</div></div><div class="section-actions"><button class="btn btn-primary edit-control" onclick="addDodelka()">＋ Строка</button></div></div>
+ <div class="search"><input class="search-input" id="dodelkiSearch" placeholder="Поиск по номеру, адресу, описанию или монтажнику…" oninput="renderDodelki()"><button class="btn" onclick="clearSearch('dodelkiSearch',renderDodelki)">Сбросить</button></div>
+ <div class="card"><div style="padding:11px 13px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)">В работе</div><div id="dodelkiDesktop" class="table-wrap desktop-table"></div><div id="dodelkiMobile" class="mobile-list"></div></div>
+ <div class="done-block" id="dodelkiDoneBlock"><button class="done-toggle" onclick="toggleDone('dodelkiDoneBlock')"><span class="chevron">›</span><span>Выполнено · <span id="dodelkiDoneCount">0</span></span></button><div class="done-body"><div class="card"><div id="dodelkiDoneDesktop" class="table-wrap desktop-table"></div><div id="dodelkiDoneMobile" class="mobile-list"></div></div></div></div>
 </section>
-
 <section id="ordered" class="section">
- <div class="section-head"><div><h2 class="section-title">📦 Заказные позиции</h2><div class="section-sub">Две галочки = готово · готовые — в отдельной таблице снизу</div></div><div class="section-actions"><button class="btn btn-primary" onclick="addOrdered()">＋ Строка</button></div></div>
- <div class="search"><input id="orderedSearch" placeholder="Поиск по номеру или тексту…" oninput="renderOrdered()"><button class="btn" onclick="clearSearch('orderedSearch',renderOrdered)">Сбросить</button></div>
- <div class="card"><div class="section-titlebar">В работе</div><div id="orderedDesktop" class="table-wrap desktop-table"></div><div id="orderedMobile" class="mobile-list"></div></div>
- <div class="done-block" id="orderedDoneBlock">
-   <button class="done-toggle" onclick="toggleDone('orderedDoneBlock')">
-     <span class="chevron">›</span>
-     <span>Готово · <span id="orderedDoneCount">0</span></span>
-   </button>
-   <div class="done-body">
-     <div class="card"><div id="orderedDoneDesktop" class="table-wrap desktop-table"></div><div id="orderedDoneMobile" class="mobile-list"></div></div>
-   </div>
- </div>
+ <div class="section-head"><div><h2 class="section-title">📦 Заказные позиции</h2><div class="section-sub">Две галочки = готово · готовые — в отдельной таблице снизу</div></div><div class="section-actions"><button class="btn btn-primary edit-control" onclick="addOrdered()">＋ Строка</button></div></div>
+ <div class="search"><input class="search-input" id="orderedSearch" placeholder="Поиск по номеру или тексту…" oninput="renderOrdered()"><button class="btn" onclick="clearSearch('orderedSearch',renderOrdered)">Сбросить</button></div>
+ <div class="card"><div style="padding:11px 13px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)">В работе</div><div id="orderedDesktop" class="table-wrap desktop-table"></div><div id="orderedMobile" class="mobile-list"></div></div>
+ <div class="done-block" id="orderedDoneBlock"><button class="done-toggle" onclick="toggleDone('orderedDoneBlock')"><span class="chevron">›</span><span>Готово · <span id="orderedDoneCount">0</span></span></button><div class="done-body"><div class="card"><div id="orderedDoneDesktop" class="table-wrap desktop-table"></div><div id="orderedDoneMobile" class="mobile-list"></div></div></div></div>
 </section>
-
 <section id="schedule" class="section">
- <div class="section-head"><div><h2 class="section-title">🗓️ График</h2><div class="section-sub">7 монтажников · фиксированный список · просто вписывайте, что делает каждый в каждый день</div></div></div>
-
- <div class="schedule-pool">
-   <div class="schedule-pool-head">Доступные заказы и доделки</div>
-   <div class="schedule-pool-body">
-     <div class="schedule-pool-section">
-       <div class="schedule-pool-title">🟩 Монтаж — из заказов <span class="count" id="scheduleMountingCount">0</span></div>
-       <div id="scheduleMounting" class="schedule-pool-list"></div>
-     </div>
-     <div class="schedule-pool-section">
-       <div class="schedule-pool-title">🟫 Доделки <span class="count" id="scheduleDodelkiCount">0</span></div>
-       <div id="scheduleDodelki" class="schedule-pool-list"></div>
-     </div>
-   </div>
- </div>
-
- <div class="card"><div class="section-titlebar">Расписание монтажников</div><div class="schedule-wrap" style="overflow-x:auto"><div id="scheduleBoard" class="schedule-board"></div></div></div>
- <div class="schedule-hint">Заполняйте ячейки вручную — время, номер заказа, комментарий. Всё сохраняется автоматически.</div>
- <div class="schedule-actions"><button class="btn btn-danger" onclick="clearSchedule()">Очистить</button></div>
+ <div class="section-head"><div><h2 class="section-title">🗓️ График</h2><div class="section-sub">График сохраняется автоматически · обычная ссылка доступна только для просмотра</div></div></div>
+ <div class="schedule-pool"><div class="schedule-pool-head">Доступные позиции</div><div class="schedule-pool-body">
+  <div class="schedule-pool-section"><div class="schedule-pool-title">Заказы · <span id="scheduleMountingCount" class="count">0</span></div><div id="scheduleMounting" class="schedule-pool-list"></div></div>
+  <div class="schedule-pool-section"><div class="schedule-pool-title">Доделки · <span id="scheduleDodelkiCount" class="count">0</span></div><div id="scheduleDodelki" class="schedule-pool-list"></div></div>
+ </div></div>
+ <div class="table-wrap"><div id="scheduleBoard" class="schedule-board"></div></div>
+ <div style="font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0">Заполняйте ячейки вручную — время, номер заказа, комментарий. Всё сохраняется автоматически.</div>
+ <div class="section-actions"><button class="btn btn-danger edit-control" onclick="clearSchedule()">Очистить</button></div>
 </section>
 </main>
 <div id="toast" class="toast hidden"></div>
-
 <script>
 const URL='https://xeueknrdngciphkwddfu.supabase.co';
 const KEY='sb_publishable_r-nKoe46FVG9AKyMDCQFJg_hTL6uws4';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 let ordersData=[],dodelkiRows=[],orderedRows=[],refreshBusy=false,toastTimer=null;
+let editKey=sessionStorage.getItem('rubanok_edit_key')||'';
+let editMode=false;
 const SCHEDULE_DAYS=['ПН','ВТ','СР','ЧТ','ПТ'];
 const SCHEDULE_WORKERS=['Игорь','Константин К','Сергей Ю','Владимир','Павел','Константин Х','Сергей Ш'];
 let scheduleState={names:[...SCHEDULE_WORKERS],cells:{}};
@@ -380,240 +90,117 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const isEditing=()=>{const e=document.activeElement;return !!e&&(e.tagName==='INPUT'||e.tagName==='TEXTAREA'||e.tagName==='SELECT')};
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),2600)}
 function setStatus(text,ok=true){const e=document.getElementById('globalStatus');e.textContent=text;e.className='status '+(ok?'online':'offline')}
-async function api(path,opt={}){const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers:{...H,...(opt.headers||{})}});if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
+async function api(path,opt={}){
+ const method=(opt.method||'GET').toUpperCase();
+ if(method!=='GET' && !editKey) throw Error('READ_ONLY');
+ const headers={...H,...(opt.headers||{})};
+ if(editKey) headers['x-rubanok-key']=editKey;
+ const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers});
+ if(!r.ok)throw Error(await r.text());
+ return r.status===204?null:r.json()
+}
+async function verifyEditKey(key){
+ try{const r=await fetch(URL+'/rest/v1/rpc/rubanok_check_key',{method:'POST',headers:H,body:JSON.stringify({p_key:key})});if(!r.ok)return false;return await r.json()===true}catch(e){return false}
+}
+async function requestEditAccess(){
+ const key=prompt('Введите ключ редактирования:');if(!key)return;
+ setStatus('Проверяем ключ…',false);
+ if(await verifyEditKey(key)){editKey=key;editMode=true;sessionStorage.setItem('rubanok_edit_key',key);applyEditUi();setStatus('● Редактирование включено',true);toast('Режим редактирования включён')}
+ else{editKey='';editMode=false;sessionStorage.removeItem('rubanok_edit_key');applyEditUi();setStatus('● Только просмотр',true);toast('Неверный ключ')}
+}
+function lockEditing(){editKey='';editMode=false;sessionStorage.removeItem('rubanok_edit_key');applyEditUi();setStatus('● Только просмотр',true);toast('Режим редактирования выключен')}
+function applyEditUi(){document.body.classList.toggle('readonly',!editMode);const b=document.getElementById('editBtn');if(b){b.textContent=editMode?'🔓 Выйти из редактирования':'🔒 Редактировать';b.onclick=editMode?lockEditing:requestEditAccess}}
+async function restoreEditMode(){if(!editKey){editMode=false;applyEditUi();return}if(await verifyEditKey(editKey)){editMode=true;applyEditUi()}else{editKey='';editMode=false;sessionStorage.removeItem('rubanok_edit_key');applyEditUi()}}
 
-/* === ДОДЕЛКИ: две таблицы === */
 function renderDodelki(){
-  const q=(document.getElementById('dodelkiSearch')?.value||'').trim().toLowerCase();
-  const visible=dodelkiRows.filter(r=>!q||[r.order_number,r.address,r.description,r.installer].some(v=>String(v||'').toLowerCase().includes(q)));
-  const active=visible.filter(r=>!r.completed);
-  const done=visible.filter(r=>r.completed);
-
-  const head=`<table class="dodelki-table"><colgroup><col style="width:120px"><col style="width:28%"><col style="width:34%"><col style="width:18%"><col style="width:90px"><col style="width:35px"></colgroup><thead><tr><th>№ заказа</th><th>Адрес</th><th>Описание</th><th>Монтажник</th><th>Готово</th><th></th></tr></thead><tbody>`;
-
-  const dk=document.getElementById('dodelkiDesktop'),dm=document.getElementById('dodelkiMobile');
-  dk.innerHTML=head+(active.length?active.map(dodelkaTableRow).join(''):'<tr><td colspan="6" class="empty">Нет активных позиций</td></tr>')+'</tbody></table>';
-  dm.innerHTML=active.length?active.map(dodelkaMobileRow).join(''):'<div class="empty">Нет активных позиций</div>';
-
-  const dkd=document.getElementById('dodelkiDoneDesktop'),dmd=document.getElementById('dodelkiDoneMobile');
-  dkd.innerHTML=head+(done.length?done.map(dodelkaTableRow).join(''):'<tr><td colspan="6" class="empty">Пока ничего не выполнено</td></tr>')+'</tbody></table>';
-  dmd.innerHTML=done.length?done.map(dodelkaMobileRow).join(''):'<div class="empty">Пока ничего не выполнено</div>';
-
-  document.getElementById('dodelkiDoneCount').textContent=done.length;
+ const q=(document.getElementById('dodelkiSearch')?.value||'').trim().toLowerCase(),visible=dodelkiRows.filter(r=>!q||[r.order_number,r.address,r.description,r.installer].some(v=>String(v||'').toLowerCase().includes(q))),active=visible.filter(r=>!r.completed),done=visible.filter(r=>r.completed);
+ const head='<table style="min-width:850px"><colgroup><col style="width:120px"><col style="width:28%"><col style="width:34%"><col style="width:18%"><col style="width:90px"><col style="width:35px"></colgroup><thead><tr><th>№ заказа</th><th>Адрес</th><th>Описание</th><th>Монтажник</th><th>Готово</th><th></th></tr></thead><tbody>',tail='</tbody></table>';
+ document.getElementById('dodelkiDesktop').innerHTML=head+(active.length?active.map(dodelkaTableRow).join(''):'<tr><td colspan="6" class="empty">Нет активных доделок</td></tr>')+tail;
+ document.getElementById('dodelkiMobile').innerHTML=active.length?active.map(dodelkaMobileRow).join(''):'<div class="empty">Нет активных доделок</div>';
+ document.getElementById('dodelkiDoneDesktop').innerHTML=head+(done.length?done.map(dodelkaTableRow).join(''):'<tr><td colspan="6" class="empty">Пока ничего не выполнено</td></tr>')+tail;
+ document.getElementById('dodelkiDoneMobile').innerHTML=done.length?done.map(dodelkaMobileRow).join(''):'<div class="empty">Пока ничего не выполнено</div>';
+ document.getElementById('dodelkiDoneCount').textContent=done.length;applyEditUi();
 }
-function dodelkaTableRow(r){const i=dodelkiRows.indexOf(r);return `<tr class="${r.completed?'completed':''}"><td><input type="text" value="${esc(r.order_number)}" onchange="editDodelka(${i},'order_number',this.value)"></td><td><input type="text" value="${esc(r.address)}" onchange="editDodelka(${i},'address',this.value)"></td><td><input type="text" value="${esc(r.description)}" onchange="editDodelka(${i},'description',this.value)"></td><td><input type="text" value="${esc(r.installer)}" onchange="editDodelka(${i},'installer',this.value)"></td><td class="center"><input class="done-check" type="checkbox" ${r.completed?'checked':''} onchange="completeDodelka(${i},this.checked)"></td><td><button class="delete" onclick="delDodelka(${i})">×</button></td></tr>`}
-function dodelkaMobileRow(r){const i=dodelkiRows.indexOf(r);return `<div class="m-row ${r.completed?'completed':''}"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.order_number)}" onchange="editDodelka(${i},'order_number',this.value)"></div><div class="m-field"><div class="m-label">Монтажник</div><input class="m-input" value="${esc(r.installer)}" onchange="editDodelka(${i},'installer',this.value)"></div><div class="m-field wide"><div class="m-label">Адрес</div><input class="m-input" value="${esc(r.address)}" onchange="editDodelka(${i},'address',this.value)"></div><div class="m-field wide"><div class="m-label">Описание</div><input class="m-input" value="${esc(r.description)}" onchange="editDodelka(${i},'description',this.value)"></div></div><div class="m-actions"><label class="m-ready"><input class="done-check" type="checkbox" ${r.completed?'checked':''} onchange="completeDodelka(${i},this.checked)"> Готово</label><button class="delete" onclick="delDodelka(${i})">Удалить ×</button></div></div>`}
-async function editDodelka(i,k,v){dodelkiRows[i][k]=v;try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
-async function completeDodelka(i,v){dodelkiRows[i].completed=v;renderDodelki();renderBrickSources();try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'PATCH',body:JSON.stringify({completed:v,updated_at:new Date().toISOString()})});await loadAll(true)}catch(e){toast('Ошибка сохранения')}}
-async function addDodelka(){try{const x=await api('dodelki',{method:'POST',body:JSON.stringify({sort_order:dodelkiRows.length})});dodelkiRows.push(x[0]);renderDodelki();renderBrickSources()}catch(e){toast('Не удалось добавить строку')}}
-async function delDodelka(i){if(!confirm('Удалить эту доделку?'))return;try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'DELETE'});dodelkiRows.splice(i,1);renderDodelki();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
+function dodelkaTableRow(r){const i=dodelkiRows.indexOf(r);return `<tr class="${r.completed?'completed':''}"><td><input type="text" value="${esc(r.order_number)}" onchange="editDodelka(${i},'order_number',this.value)"></td><td><input type="text" value="${esc(r.address)}" onchange="editDodelka(${i},'address',this.value)"></td><td><input type="text" value="${esc(r.description)}" onchange="editDodelka(${i},'description',this.value)"></td><td><input type="text" value="${esc(r.installer)}" onchange="editDodelka(${i},'installer',this.value)"></td><td class="center"><input class="done-check" type="checkbox" ${r.completed?'checked':''} onchange="toggleDodelka(${i},this.checked)"></td><td><button class="delete edit-control" onclick="delDodelka(${i})">×</button></td></tr>`}
+function dodelkaMobileRow(r){const i=dodelkiRows.indexOf(r);return `<div class="m-row ${r.completed?'completed':''}"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.order_number)}" onchange="editDodelka(${i},'order_number',this.value)"></div><div class="m-field"><div class="m-label">Монтажник</div><input class="m-input" value="${esc(r.installer)}" onchange="editDodelka(${i},'installer',this.value)"></div><div class="m-field wide"><div class="m-label">Адрес</div><input class="m-input" value="${esc(r.address)}" onchange="editDodelka(${i},'address',this.value)"></div><div class="m-field wide"><div class="m-label">Описание</div><input class="m-input" value="${esc(r.description)}" onchange="editDodelka(${i},'description',this.value)"></div></div><div class="m-actions"><label class="m-ready"><input class="big-check" type="checkbox" ${r.completed?'checked':''} onchange="toggleDodelka(${i},this.checked)"> Готово</label><button class="delete edit-control" onclick="delDodelka(${i})">Удалить ×</button></div></div>`}
+async function editDodelka(i,k,v){if(!editKey)return toast('Включите редактирование');dodelkiRows[i][k]=v;try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
+async function toggleDodelka(i,v){if(!editKey)return toast('Включите редактирование');dodelkiRows[i].completed=v;renderDodelki();renderBrickSources();try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'PATCH',body:JSON.stringify({completed:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
+async function addDodelka(){if(!editKey)return toast('Включите редактирование');try{const x=await api('dodelki',{method:'POST',body:JSON.stringify({sort_order:dodelkiRows.length})});dodelkiRows.push(x[0]);renderDodelki();renderBrickSources()}catch(e){toast('Не удалось добавить строку')}}
+async function delDodelka(i){if(!editKey)return toast('Включите редактирование');if(!confirm('Удалить эту доделку?'))return;try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'DELETE'});dodelkiRows.splice(i,1);renderDodelki();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
 
-/* === ЗАКАЗНЫЕ ПОЗИЦИИ: две таблицы === */
-function orderedDone(r){return!!(r.ordered&&r.in_workshop)}
+function orderedDone(r){return !!r.ordered&&!!r.in_workshop}
 function renderOrdered(){
-  const q=(document.getElementById('orderedSearch')?.value||'').trim().toLowerCase();
-  const visible=orderedRows.filter(r=>!q||String((r.order_number||'')+' '+(r.description||'')).toLowerCase().includes(q));
-  const active=visible.filter(r=>!orderedDone(r));
-  const done=visible.filter(r=>orderedDone(r));
-
-  const head=`<table class="ordered-table"><colgroup><col style="width:120px"><col><col style="width:120px"><col style="width:120px"><col style="width:35px"></colgroup><thead><tr><th>№ заказа</th><th>Текст / описание</th><th>Заказано</th><th>В цеху</th><th></th></tr></thead><tbody>`;
-
-  const dk=document.getElementById('orderedDesktop'),dm=document.getElementById('orderedMobile');
-  dk.innerHTML=head+(active.length?active.map(orderedTableRow).join(''):'<tr><td colspan="5" class="empty">Нет активных позиций</td></tr>')+'</tbody></table>';
-  dm.innerHTML=active.length?active.map(orderedMobileRow).join(''):'<div class="empty">Нет активных позиций</div>';
-
-  const dkd=document.getElementById('orderedDoneDesktop'),dmd=document.getElementById('orderedDoneMobile');
-  dkd.innerHTML=head+(done.length?done.map(orderedTableRow).join(''):'<tr><td colspan="5" class="empty">Пока ничего не готово</td></tr>')+'</tbody></table>';
-  dmd.innerHTML=done.length?done.map(orderedMobileRow).join(''):'<div class="empty">Пока ничего не готово</div>';
-
-  document.getElementById('orderedDoneCount').textContent=done.length;
+ const q=(document.getElementById('orderedSearch')?.value||'').trim().toLowerCase(),visible=orderedRows.filter(r=>!q||[r.order_number,r.description].some(v=>String(v||'').toLowerCase().includes(q))),active=visible.filter(r=>!orderedDone(r)),done=visible.filter(r=>orderedDone(r));
+ const head='<table style="min-width:650px"><colgroup><col style="width:120px"><col><col style="width:95px"><col style="width:95px"><col style="width:35px"></colgroup><thead><tr><th>№ заказа</th><th>Текст / описание</th><th>Заказано</th><th>В цеху</th><th></th></tr></thead><tbody>',tail='</tbody></table>';
+ document.getElementById('orderedDesktop').innerHTML=head+(active.length?active.map(orderedTableRow).join(''):'<tr><td colspan="5" class="empty">Нет активных позиций</td></tr>')+tail;
+ document.getElementById('orderedMobile').innerHTML=active.length?active.map(orderedMobileRow).join(''):'<div class="empty">Нет активных позиций</div>';
+ document.getElementById('orderedDoneDesktop').innerHTML=head+(done.length?done.map(orderedTableRow).join(''):'<tr><td colspan="5" class="empty">Пока ничего не готово</td></tr>')+tail;
+ document.getElementById('orderedDoneMobile').innerHTML=done.length?done.map(orderedMobileRow).join(''):'<div class="empty">Пока ничего не готово</div>';
+ document.getElementById('orderedDoneCount').textContent=done.length;applyEditUi();
 }
-function orderedTableRow(r){const i=orderedRows.indexOf(r);return `<tr class="${orderedDone(r)?'completed':''}"><td><input type="text" value="${esc(r.order_number)}" onchange="editOrdered(${i},'order_number',this.value)"></td><td><input type="text" value="${esc(r.description)}" onchange="editOrdered(${i},'description',this.value)"></td><td class="center"><input class="big-check" type="checkbox" ${r.ordered?'checked':''} onchange="toggleOrdered(${i},'ordered',this.checked)"></td><td class="center"><input class="big-check" type="checkbox" ${r.in_workshop?'checked':''} onchange="toggleOrdered(${i},'in_workshop',this.checked)"></td><td><button class="delete" onclick="delOrdered(${i})">×</button></td></tr>`}
-function orderedMobileRow(r){const i=orderedRows.indexOf(r);return `<div class="m-row ${orderedDone(r)?'completed':''}"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.order_number)}" onchange="editOrdered(${i},'order_number',this.value)"></div><div class="m-field wide"><div class="m-label">Текст / описание</div><input class="m-input" value="${esc(r.description)}" onchange="editOrdered(${i},'description',this.value)"></div></div><div class="m-checks" style="grid-template-columns:1fr 1fr"><div class="m-check"><input class="big-check" type="checkbox" ${r.ordered?'checked':''} onchange="toggleOrdered(${i},'ordered',this.checked)"><br>Заказано</div><div class="m-check"><input class="big-check" type="checkbox" ${r.in_workshop?'checked':''} onchange="toggleOrdered(${i},'in_workshop',this.checked)"><br>В цеху</div></div><div class="m-actions"><span></span><button class="delete" onclick="delOrdered(${i})">Удалить ×</button></div></div>`}
-async function editOrdered(i,k,v){orderedRows[i][k]=v;try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
-async function toggleOrdered(i,k,v){orderedRows[i][k]=v;renderOrdered();try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
-async function addOrdered(){try{const x=await api('ordered_positions',{method:'POST',body:JSON.stringify({sort_order:orderedRows.length})});orderedRows.push(x[0]);renderOrdered()}catch(e){toast('Не удалось добавить строку')}}
-async function delOrdered(i){if(!confirm('Удалить эту позицию?'))return;try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'DELETE'});orderedRows.splice(i,1);renderOrdered()}catch(e){toast('Ошибка удаления')}}
+function orderedTableRow(r){const i=orderedRows.indexOf(r);return `<tr class="${orderedDone(r)?'completed':''}"><td><input type="text" value="${esc(r.order_number)}" onchange="editOrdered(${i},'order_number',this.value)"></td><td><input type="text" value="${esc(r.description)}" onchange="editOrdered(${i},'description',this.value)"></td><td class="center"><input class="big-check" type="checkbox" ${r.ordered?'checked':''} onchange="toggleOrdered(${i},'ordered',this.checked)"></td><td class="center"><input class="big-check" type="checkbox" ${r.in_workshop?'checked':''} onchange="toggleOrdered(${i},'in_workshop',this.checked)"></td><td><button class="delete edit-control" onclick="delOrdered(${i})">×</button></td></tr>`}
+function orderedMobileRow(r){const i=orderedRows.indexOf(r);return `<div class="m-row ${orderedDone(r)?'completed':''}"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.order_number)}" onchange="editOrdered(${i},'order_number',this.value)"></div><div class="m-field wide"><div class="m-label">Текст / описание</div><input class="m-input" value="${esc(r.description)}" onchange="editOrdered(${i},'description',this.value)"></div></div><div class="m-checks" style="grid-template-columns:1fr 1fr"><div class="m-check"><input class="big-check" type="checkbox" ${r.ordered?'checked':''} onchange="toggleOrdered(${i},'ordered',this.checked)"><br>Заказано</div><div class="m-check"><input class="big-check" type="checkbox" ${r.in_workshop?'checked':''} onchange="toggleOrdered(${i},'in_workshop',this.checked)"><br>В цеху</div></div><div class="m-actions"><span></span><button class="delete edit-control" onclick="delOrdered(${i})">Удалить ×</button></div></div>`}
+async function editOrdered(i,k,v){if(!editKey)return toast('Включите редактирование');orderedRows[i][k]=v;try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
+async function toggleOrdered(i,k,v){if(!editKey)return toast('Включите редактирование');orderedRows[i][k]=v;renderOrdered();try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
+async function addOrdered(){if(!editKey)return toast('Включите редактирование');try{const x=await api('ordered_positions',{method:'POST',body:JSON.stringify({sort_order:orderedRows.length})});orderedRows.push(x[0]);renderOrdered()}catch(e){toast('Не удалось добавить строку')}}
+async function delOrdered(i){if(!editKey)return toast('Включите редактирование');if(!confirm('Удалить эту позицию?'))return;try{await api('ordered_positions?id=eq.'+orderedRows[i].id,{method:'DELETE'});orderedRows.splice(i,1);renderOrdered()}catch(e){toast('Ошибка удаления')}}
 
 function toggleDone(id){document.getElementById(id).classList.toggle('open')}
-
-/* === ГРАФИК === */
 function scheduleCellKey(row,day){return row+'_'+day}
 function getCell(row,day){return scheduleState.cells[scheduleCellKey(row,day)]||''}
-function setCell(row,day,value){scheduleState.cells[scheduleCellKey(row,day)]=value;queueScheduleSave()}
-function normaliseScheduleState(raw){
-  const s=raw||{};
-  const cells={};
-  const srcCells=s.cells||{};
-  Object.entries(srcCells).forEach(([k,v])=>{
-    if(typeof v==='string'){cells[k]=v;return}
-    if(v&&typeof v==='object'){
-      const parts=[];
-      if(Array.isArray(v.items)) v.items.forEach(it=>{if(it&&it.number)parts.push(it.number+(it.note?' ('+it.note+')':''))});
-      if(v.dayNote) parts.push(v.dayNote);
-      cells[k]=parts.join('\n');
-      return;
-    }
-    if(Array.isArray(v)){
-      const parts=[];
-      v.forEach(it=>{if(it&&it.type==='C')parts.push(it.text||'');else if(it&&it.number)parts.push(it.number+(it.note?' ('+it.note+')':''))});
-      cells[k]=parts.filter(Boolean).join('\n');
-    }
-  });
-  return {names:[...SCHEDULE_WORKERS],cells};
-}
-async function loadScheduleState(){
- try{
-  const rows=await api('schedule_state?id=eq.1&select=state');
-  if(rows&&rows[0]&&rows[0].state){scheduleState=normaliseScheduleState(rows[0].state)}
-  else{scheduleState=normaliseScheduleState({})}
- }catch(e){scheduleState=normaliseScheduleState({})}
-}
+function setCell(row,day,value){if(!editKey){toast('Включите редактирование');renderSchedule();return}scheduleState.cells[scheduleCellKey(row,day)]=value;queueScheduleSave()}
+function normaliseScheduleState(raw){const s=raw||{},cells={};Object.entries(s.cells||{}).forEach(([k,v])=>{if(typeof v==='string')cells[k]=v});return{names:[...SCHEDULE_WORKERS],cells}}
+async function loadScheduleState(){try{const rows=await api('schedule_state?id=eq.1&select=state');scheduleState=normaliseScheduleState(rows?.[0]?.state||{})}catch(e){scheduleState=normaliseScheduleState({})}}
 let scheduleSaveTimer=null;
-async function saveScheduleState(showError=true){
- clearTimeout(scheduleSaveTimer);
- const payload={id:1,state:scheduleState,updated_at:new Date().toISOString()};
- try{await api('schedule_state?on_conflict=id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(payload)})}
- catch(e){if(showError)toast('Ошибка сохранения графика')}
-}
+async function saveScheduleState(showError=true){clearTimeout(scheduleSaveTimer);const payload={id:1,state:scheduleState,updated_at:new Date().toISOString()};try{await api('schedule_state?on_conflict=id',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},body:JSON.stringify(payload)})}catch(e){if(showError)toast('Ошибка сохранения графика')}}
 function queueScheduleSave(){clearTimeout(scheduleSaveTimer);scheduleSaveTimer=setTimeout(()=>saveScheduleState(),180)}
-
-function renderSchedule(){
- const board=document.getElementById('scheduleBoard');if(!board)return;
- let out='<div class="schedule-grid"><div class="schedule-cell schedule-head">Монтажник</div>';
- SCHEDULE_DAYS.forEach(d=>out+=`<div class="schedule-cell schedule-head">${d}</div>`);
- for(let r=0;r<SCHEDULE_WORKERS.length;r++){
-   out+=`<div class="schedule-cell schedule-name">${esc(SCHEDULE_WORKERS[r])}</div>`;
-   for(let d=0;d<5;d++){
-     out+=`<div class="schedule-cell"><textarea class="schedule-input" placeholder="Что делает…" onchange="setCell(${r},${d},this.value)">${esc(getCell(r,d))}</textarea></div>`;
-   }
- }
- out+='</div>';board.innerHTML=out;
-}
-function scheduleBricks(){
- const mounting=[],fixes=[];
- for(const p of ordersData)for(const r of p.rows){
-   if(!r.ready&&r.ldsp&&r.furniture)mounting.push({type:'M',id:String(r.id),number:r.number||'Без номера',worker:r.assembler||'',product:r.product||'',address:r.address||''});
- }
- for(const r of dodelkiRows){
-   if(!r.completed)fixes.push({type:'D',id:String(r.id),number:r.order_number||'Без номера',worker:r.installer||'',product:r.description||'',address:r.address||''});
- }
- return{mounting,fixes}
-}
-function poolItemHTML(x){
-  const tag=x.type==='M'?'М':'Д';
-  const tagCls=x.type==='M'?'':'d';
-  const worker=x.worker?`<span class="worker">${esc(x.worker)}</span>`:'';
-  const meta=[x.product,x.address].filter(Boolean).join(' / ');
-  return `<div class="schedule-pool-item">
-    <span class="tag ${tagCls}">${tag}</span>
-    <div class="main">
-      <div class="line1"><span class="num">${esc(x.number)}</span>${worker}</div>
-      ${meta?`<div class="meta" title="${esc(meta)}">${esc(meta)}</div>`:''}
-    </div>
-  </div>`;
-}
-function renderBrickSources(){
-  const s=scheduleBricks();
-  const m=document.getElementById('scheduleMounting'),d=document.getElementById('scheduleDodelki');
-  if(!m||!d)return;
-  m.innerHTML=s.mounting.length?s.mounting.map(poolItemHTML).join(''):'<div class="schedule-pool-empty">Нет доступных заказов</div>';
-  d.innerHTML=s.fixes.length?s.fixes.map(poolItemHTML).join(''):'<div class="schedule-pool-empty">Нет доступных доделок</div>';
-  document.getElementById('scheduleMountingCount').textContent=s.mounting.length;
-  document.getElementById('scheduleDodelkiCount').textContent=s.fixes.length;
-}
+function renderSchedule(){const board=document.getElementById('scheduleBoard');if(!board)return;let out='<div class="schedule-grid"><div class="schedule-cell schedule-head">Монтажник</div>';SCHEDULE_DAYS.forEach(d=>out+=`<div class="schedule-cell schedule-head">${d}</div>`);for(let r=0;r<SCHEDULE_WORKERS.length;r++){out+=`<div class="schedule-cell schedule-name">${esc(SCHEDULE_WORKERS[r])}</div>`;for(let d=0;d<5;d++)out+=`<div class="schedule-cell"><textarea class="schedule-input" placeholder="Что делает…">${esc(getCell(r,d))}</textarea></div>`}out+='</div>';board.innerHTML=out;board.querySelectorAll('.schedule-input').forEach((el,i)=>{const row=Math.floor(i/5),day=i%5;el.addEventListener('change',()=>setCell(row,day,el.value))})}
+function scheduleBricks(){const mounting=[],fixes=[];for(const p of ordersData)for(const r of p.rows){if(!r.ready&&r.ldsp&&r.furniture)mounting.push({type:'M',number:r.number||'Без номера',worker:r.assembler||'',product:r.product||'',address:r.address||''})}for(const r of dodelkiRows)if(!r.completed)fixes.push({type:'D',number:r.order_number||'Без номера',worker:r.installer||'',product:r.description||'',address:r.address||''});return{mounting,fixes}}
+function poolItemHTML(x){const tag=x.type==='M'?'М':'Д',cls=x.type==='M'?'':'d',worker=x.worker?`<span class="worker">${esc(x.worker)}</span>`:'',meta=[x.product,x.address].filter(Boolean).join(' / ');return `<div class="schedule-pool-item"><span class="tag ${cls}">${tag}</span><div class="main"><div class="line1"><span class="num">${esc(x.number)}</span>${worker}</div>${meta?`<div class="meta">${esc(meta)}</div>`:''}</div></div>`}
+function renderBrickSources(){const s=scheduleBricks(),m=document.getElementById('scheduleMounting'),d=document.getElementById('scheduleDodelki');m.innerHTML=s.mounting.length?s.mounting.map(poolItemHTML).join(''):'<div style="font-size:11px;color:var(--muted)">Нет доступных заказов</div>';d.innerHTML=s.fixes.length?s.fixes.map(poolItemHTML).join(''):'<div style="font-size:11px;color:var(--muted)">Нет доступных доделок</div>';document.getElementById('scheduleMountingCount').textContent=s.mounting.length;document.getElementById('scheduleDodelkiCount').textContent=s.fixes.length}
 function renderScheduleAll(){renderSchedule();renderBrickSources()}
-async function clearSchedule(){
-  if(!confirm('Очистить весь график? Все записи в ячейках будут удалены.'))return;
-  scheduleState={names:[...SCHEDULE_WORKERS],cells:{}};
-  await saveScheduleState();renderScheduleAll();toast('График очищен');
-}
+async function clearSchedule(){if(!editKey)return toast('Включите редактирование');if(!confirm('Очистить весь график? Все записи в ячейках будут удалены.'))return;scheduleState={names:[...SCHEDULE_WORKERS],cells:{}};await saveScheduleState();renderScheduleAll();toast('График очищен')}
 
-/* === ЗАКАЗЫ === */
 function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furniture:false,facades:false,assembly_ready:false,assembler:'',installer:'',note:'',ready:false}}
-async function loadAll(silent=false){
- if(refreshBusy)return;refreshBusy=true;try{
-  const [ps,os,dr,op]=await Promise.all([api('periods?select=*&order=sort_order.asc'),api('orders?select=*&order=sort_order.asc'),api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),api('ordered_positions?select=*&order=sort_order.asc')]);
-  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready}))}));
-  dodelkiRows=dr;orderedRows=op;renderOrders();renderDodelki();renderOrdered();renderScheduleAll();setStatus('● Онлайн',true)
- }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
-}
-function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
 function orderMatches(r,q){return !q||[r.number,r.product,r.address].some(v=>String(v||'').toLowerCase().includes(q.toLowerCase()))}
 function renderOrders(){
-  const root=document.getElementById('ordersApp');
-  const q=(document.getElementById('orderSearch')?.value||'').trim();
-  if(!ordersData.length){root.innerHTML='<div class="card"><div class="empty">Нет периодов</div></div>';return}
-  const collapsed=[],expanded=[];
-  ordersData.forEach((p,pi)=>{
-    const rows=p.rows.filter(r=>orderMatches(r,q));
-    const open=periodOpen(p.id) || (q && rows.length);
-    if(open) expanded.push({p,pi,rows});
-    else collapsed.push({p,pi});
-  });
-  let html='<div class="periods-wrap">';
-  if(collapsed.length){
-    html+='<div class="periods-chips">';
-    collapsed.forEach(({p,pi})=>{
-      html+=`<button class="period-chip" onclick="togglePeriod(${pi})" title="Развернуть период">${esc(p.period||'Без названия')}</button>`;
-    });
-    html+='</div>';
-  }
-  expanded.forEach(({p,pi,rows})=>{
-    html+=`<section class="period open">
-      <div class="period-head">
-        <button class="period-toggle" onclick="togglePeriod(${pi})">
-          <span class="chevron">›</span>
-          <input class="period-title-input" value="${esc(p.period)}" onclick="event.stopPropagation()" onchange="editPeriod(${pi},this.value)">
-          <span class="period-meta">${p.rows.length} строк</span>
-        </button>
-        <div class="period-tools">
-          <button class="btn btn-sm" onclick="addOrderRow(${pi})">＋ Строка</button>
-          <button class="btn btn-sm btn-danger" onclick="delPeriod(${pi})">− Период</button>
-        </div>
-      </div>
-      <div class="period-body">
-        <div class="table-wrap desktop-table">
-          <table>
-            <colgroup><col class="col-num"><col class="col-product"><col><col style="width:54px"><col style="width:54px"><col style="width:72px"><col style="width:92px"><col class="col-worker"><col class="col-worker"><col class="col-note"><col style="width:34px"></colgroup>
-            <thead><tr><th>№ / готово</th><th>Изделие</th><th>Адрес</th><th>ЛДСП</th><th>Фур-ра</th><th>Фасады</th><th>Готовность<br>к сборке</th><th>Сборщик</th><th>Монтажник</th><th>Примечание</th><th></th></tr></thead>
-            <tbody>${rows.length?rows.map(r=>orderTableRow(pi,p.rows.indexOf(r),r)).join(''):'<tr><td colspan="11" class="empty">Ничего не найдено</td></tr>'}</tbody>
-          </table>
-        </div>
-        <div class="mobile-list">${rows.length?rows.map(r=>orderMobileRow(pi,p.rows.indexOf(r),r)).join(''):'<div class="empty">Ничего не найдено</div>'}</div>
-      </div>
-    </section>`;
-  });
-  html+='</div>';
-  root.innerHTML=html;
+ const root=document.getElementById('ordersApp'),q=(document.getElementById('orderSearch')?.value||'').trim();
+ if(!ordersData.length){root.innerHTML='<div class="card"><div class="empty">Нет периодов</div></div>';return}
+ let html='<div class="periods-wrap">',collapsed=[];
+ ordersData.forEach((p,pi)=>{const rows=p.rows.filter(r=>orderMatches(r,q)),open=periodOpen(p.id)||(q&&rows.length);if(!open)collapsed.push({p,pi})});
+ if(collapsed.length)html+='<div class="periods-chips">'+collapsed.map(({p,pi})=>`<button class="period-chip" onclick="togglePeriod(${pi})">${esc(p.period||'Без названия')}</button>`).join('')+'</div>';
+ ordersData.forEach((p,pi)=>{const rows=p.rows.filter(r=>orderMatches(r,q)),open=periodOpen(p.id)||(q&&rows.length);if(!open)return;html+=`<section class="period"><div class="period-head"><button class="period-toggle" onclick="togglePeriod(${pi})"><span class="chevron">›</span><input class="period-title-input" value="${esc(p.period)}" onclick="event.stopPropagation()" onchange="editPeriod(${pi},this.value)"><span class="period-meta">${p.rows.length} строк</span></button><div class="period-tools"><button class="btn btn-sm edit-control" onclick="addOrderRow(${pi})">＋ Строка</button><button class="btn btn-sm btn-danger edit-control" onclick="delPeriod(${pi})">− Период</button></div></div><div class="period-body"><div class="table-wrap desktop-table"><table><colgroup><col class="col-num"><col class="col-product"><col><col style="width:54px"><col style="width:54px"><col style="width:72px"><col style="width:92px"><col class="col-worker"><col class="col-worker"><col class="col-note"><col style="width:34px"></colgroup><thead><tr><th>№ / готово</th><th>Изделие</th><th>Адрес</th><th>ЛДСП</th><th>Фур-ра</th><th>Фасады</th><th>Готовность<br>к сборке</th><th>Сборщик</th><th>Монтажник</th><th>Примечание</th><th></th></tr></thead><tbody>${rows.length?rows.map(r=>orderTableRow(pi,p.rows.indexOf(r),r)).join(''):'<tr><td colspan="11" class="empty">Ничего не найдено</td></tr>'}</tbody></table></div><div class="mobile-list">${rows.length?rows.map(r=>orderMobileRow(pi,p.rows.indexOf(r))).join(''):'<div class="empty">Ничего не найдено</div>'}</div></div></section>`});
+ html+='</div>';root.innerHTML=html;applyEditUi();
 }
-function orderTableRow(pi,ri,r){return `<tr><td><input type="text" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)" style="width:calc(100% - 34px);display:inline-block"><button class="ready-btn ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button></td><td><input type="text" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></td><td><input type="text" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></td>${materialCell(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${materialCell(pi,ri,'furniture',r.furniture,'Фур-ра')}${materialCell(pi,ri,'facades',r.facades,'Фасады')}${materialCell(pi,ri,'assembly_ready',r.assembly_ready,'Готовность к сборке')}<td><input type="text" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></td><td><input type="text" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></td><td><input type="text" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></td><td><button class="delete" onclick="delOrderRow(${pi},${ri})">×</button></td></tr>`}
-function materialCell(pi,ri,k,v,title){return `<td class="center"><button class="material ${v?'on':''}" title="${title}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button></td>`}
-function orderMobileRow(pi,ri,r){return `<div class="m-row"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)"></div><div class="m-field"><div class="m-label">Изделие</div><input class="m-input" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></div><div class="m-field wide"><div class="m-label">Адрес</div><input class="m-input" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></div><div class="m-field"><div class="m-label">Сборщик</div><input class="m-input" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></div><div class="m-field"><div class="m-label">Монтажник</div><input class="m-input" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></div><div class="m-field wide"><div class="m-label">Примечание</div><input class="m-input" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></div></div><div class="m-checks">${mobileCheck(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${mobileCheck(pi,ri,'furniture',r.furniture,'Фур-ра')}${mobileCheck(pi,ri,'facades',r.facades,'Фасады')}${mobileCheck(pi,ri,'assembly_ready',r.assembly_ready,'Сборка')}</div><div class="m-actions"><label class="m-ready"><button class="ready-btn ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button> Проект готов</label><button class="delete" onclick="delOrderRow(${pi},${ri})">Удалить ×</button></div></div>`}
-function mobileCheck(pi,ri,k,v,label){return `<div class="m-check"><button class="material ${v?'on':''}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button>${label}</div>`}
-async function editOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
-async function toggleOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;renderOrders();renderBrickSources();try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
-function togglePeriod(pi){const p=ordersData[pi],open=!periodOpen(p.id);setPeriodOpen(p.id,open);renderOrders()}
-async function editPeriod(pi,v){ordersData[pi].period=v;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'PATCH',body:JSON.stringify({title:v})})}catch(e){toast('Ошибка сохранения')}}
-async function addPeriod(){try{const r=await api('periods',{method:'POST',body:JSON.stringify({title:'Новый период',sort_order:ordersData.length})});const p={id:r[0].id,period:r[0].title,rows:[]};ordersData.push(p);setPeriodOpen(p.id,true);await addOrderRow(ordersData.length-1);renderOrders()}catch(e){toast('Не удалось создать период')}}
-async function addOrderRow(pi){try{const r=blankOrder(),x=await api('orders',{method:'POST',body:JSON.stringify({period_id:ordersData[pi].id,...r,sort_order:ordersData[pi].rows.length})});ordersData[pi].rows.push({...r,id:x[0].id});setPeriodOpen(ordersData[pi].id,true);renderOrders()}catch(e){toast('Не удалось добавить строку')}}
-async function delOrderRow(pi,ri){if(!confirm('Удалить строку?'))return;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'DELETE'});ordersData[pi].rows.splice(ri,1);renderOrders();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
-async function delPeriod(pi){if(!confirm('Удалить период?'))return;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'DELETE'});ordersData.splice(pi,1);renderOrders()}catch(e){toast('Ошибка удаления периода')}}
-
+function orderTableRow(pi,ri,r){return `<tr><td><input type="text" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)"><button class="ready-btn edit-control ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button></td><td><input type="text" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></td><td><input type="text" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></td>${materialCell(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${materialCell(pi,ri,'furniture',r.furniture,'Фур-ра')}${materialCell(pi,ri,'facades',r.facades,'Фасады')}${materialCell(pi,ri,'assembly_ready',r.assembly_ready,'Готовность к сборке')}<td><input type="text" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></td><td><input type="text" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></td><td><input type="text" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></td><td><button class="delete edit-control" onclick="delOrderRow(${pi},${ri})">×</button></td></tr>`}
+function materialCell(pi,ri,k,v,title){return `<td class="center"><button class="material edit-control ${v?'on':''}" title="${title}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button></td>`}
+function orderMobileRow(pi,ri,r){return `<div class="m-row"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)"></div><div class="m-field"><div class="m-label">Изделие</div><input class="m-input" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></div><div class="m-field wide"><div class="m-label">Адрес</div><input class="m-input" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></div><div class="m-field"><div class="m-label">Сборщик</div><input class="m-input" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></div><div class="m-field"><div class="m-label">Монтажник</div><input class="m-input" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></div><div class="m-field wide"><div class="m-label">Примечание</div><input class="m-input" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></div></div><div class="m-checks">${mobileCheck(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${mobileCheck(pi,ri,'furniture',r.furniture,'Фур-ра')}${mobileCheck(pi,ri,'facades',r.facades,'Фасады')}${mobileCheck(pi,ri,'assembly_ready',r.assembly_ready,'Сборка')}</div><div class="m-actions"><label class="m-ready"><button class="ready-btn edit-control ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button> Проект готов</label><button class="delete edit-control" onclick="delOrderRow(${pi},${ri})">Удалить ×</button></div></div>`}
+function mobileCheck(pi,ri,k,v,label){return `<div class="m-check"><button class="material edit-control ${v?'on':''}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button>${label}</div>`}
+async function editOrder(pi,ri,k,v){if(!editKey)return toast('Включите редактирование');ordersData[pi].rows[ri][k]=v;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
+async function toggleOrder(pi,ri,k,v){if(!editKey)return toast('Включите редактирование');ordersData[pi].rows[ri][k]=v;renderOrders();renderBrickSources();try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
+function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}function togglePeriod(pi){const p=ordersData[pi],open=!periodOpen(p.id);setPeriodOpen(p.id,open);renderOrders()}
+async function editPeriod(pi,v){if(!editKey)return toast('Включите редактирование');ordersData[pi].period=v;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'PATCH',body:JSON.stringify({title:v})})}catch(e){toast('Ошибка сохранения')}}
+async function addPeriod(){if(!editKey)return toast('Включите редактирование');try{const r=await api('periods',{method:'POST',body:JSON.stringify({title:'Новый период',sort_order:ordersData.length})});const p={id:r[0].id,period:r[0].title,rows:[]};ordersData.push(p);setPeriodOpen(p.id,true);await addOrderRow(ordersData.length-1);renderOrders()}catch(e){toast('Не удалось создать период')}}
+async function addOrderRow(pi){if(!editKey)return toast('Включите редактирование');try{const r=blankOrder(),x=await api('orders',{method:'POST',body:JSON.stringify({period_id:ordersData[pi].id,...r,sort_order:ordersData[pi].rows.length})});ordersData[pi].rows.push({...r,id:x[0].id});setPeriodOpen(ordersData[pi].id,true);renderOrders()}catch(e){toast('Не удалось добавить строку')}}
+async function delOrderRow(pi,ri){if(!editKey)return toast('Включите редактирование');if(!confirm('Удалить строку?'))return;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'DELETE'});ordersData[pi].rows.splice(ri,1);renderOrders();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
+async function delPeriod(pi){if(!editKey)return toast('Включите редактирование');if(!confirm('Удалить период?'))return;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'DELETE'});ordersData.splice(pi,1);renderOrders()}catch(e){toast('Ошибка удаления периода')}}
 function clearSearch(id,fn){document.getElementById(id).value='';fn();document.getElementById(id).focus()}
 
 const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График'};
-function showHome(push=true){document.getElementById('siteHeader').style.display='none';document.getElementById('cover').style.display='flex';document.querySelectorAll('.section').forEach(s=>s.style.display='none');window.scrollTo({top:0,behavior:'smooth'});if(push&&location.hash)history.pushState({},'',location.pathname+location.search)}
-function showSection(id,push=true){const s=document.getElementById(id);if(!s)return;document.getElementById('siteHeader').style.display='block';document.getElementById('cover').style.display='none';document.querySelectorAll('.section').forEach(x=>x.style.display='none');s.style.display='block';document.getElementById('pageTitle').textContent=sectionTitles[id]||'';window.scrollTo({top:0,behavior:'smooth'});if(push)history.pushState({},'', '#'+id)}
-function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles[id])showSection(id,false);else showHome(false)}
+function showHome(){document.getElementById('siteHeader').style.display='none';document.getElementById('cover').style.display='flex';document.querySelectorAll('.section').forEach(s=>s.style.display='none');window.scrollTo({top:0,behavior:'smooth'})}
+function showSection(id){const s=document.getElementById(id);if(!s)return;document.getElementById('siteHeader').style.display='block';document.getElementById('cover').style.display='none';document.querySelectorAll('.section').forEach(x=>x.style.display='none');s.style.display='block';document.getElementById('pageTitle').textContent=sectionTitles[id]||'';window.scrollTo({top:0,behavior:'smooth'});history.replaceState({},'',location.pathname+'#'+id)}
+function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles[id])showSection(id);else showHome()}
 window.addEventListener('popstate',routeFromHash);window.addEventListener('hashchange',routeFromHash);
+async function loadAll(silent=false){
+ if(refreshBusy)return;refreshBusy=true;
+ try{
+  const [ps,os,dr,op]=await Promise.all([api('periods?select=*&order=sort_order.asc'),api('orders?select=*&order=sort_order.asc'),api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),api('ordered_positions?select=*&order=sort_order.asc')]);
+  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready}))}));
+  dodelkiRows=dr;orderedRows=op;renderOrders();renderDodelki();renderOrdered();renderScheduleAll();setStatus(editMode?'● Редактирование':'● Только просмотр',true)
+ }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
+}
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
-(async()=>{await loadScheduleState();await loadAll();routeFromHash()})();
-</script>
-<script
- src="https://shimly.multifaucet.eu/stream/widget.js"
- data-genre="pop"
- data-position="bottom-right">
+(async()=>{await restoreEditMode();await loadScheduleState();await loadAll();routeFromHash();applyEditUi()})();
 </script>
 </body>
 </html>
