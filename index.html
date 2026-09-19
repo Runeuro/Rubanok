@@ -11,80 +11,172 @@
   --panel:#1c1c1e;
   --panel2:#242426;
   --text:#e8e8ea;
+  --text-strong:#fff;
   --muted:#8e8e93;
   --line:#2e2e30;
+  --line-soft:rgba(255,255,255,.06);
   --blue:#ff8c1a;
   --blue2:#3a2a12;
   --green:#2ea043;
-  --green-bg:#12351c;
   --red:#ff5c5c;
   --redbg:#3a1a1a;
   --orange:#ff8c1a;
-  --orange-bg:#3a2a12;
   --orange-hover:#ffa64d;
   --shadow:0 10px 30px rgba(0,0,0,.45);
   --radius:16px;
+  --glass-bg:rgba(30,30,34,.42);
+  --glass-border:rgba(255,255,255,.10);
+  --glass-shadow:0 25px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.04);
+  --cover-bg:
+    radial-gradient(circle at 20% 20%, rgba(255,140,26,.18), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(80,120,255,.14), transparent 50%),
+    radial-gradient(circle at 50% 90%, rgba(255,90,140,.12), transparent 50%),
+    #0d0d0f;
+  --menu-card-bg:rgba(255,255,255,.06);
+  --menu-card-bg-hover:rgba(255,255,255,.10);
+  --menu-card-border:rgba(255,255,255,.12);
+  --menu-card-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(255,255,255,.04);
+  --toggle-bg:rgba(255,255,255,.10);
+  --toggle-knob:#ff8c1a;
+  --toggle-icon:#e8e8ea;
 }
+
+/* === СВЕТЛАЯ ТЕМА (Apple style) === */
+html[data-theme="light"]{
+  --bg:#f5f5f7;
+  --panel:#ffffff;
+  --panel2:#f7f7f9;
+  --text:#1d1d1f;
+  --text-strong:#000;
+  --muted:#6e6e73;
+  --line:#e5e5ea;
+  --line-soft:rgba(0,0,0,.05);
+  --blue:#ff8c1a;
+  --blue2:#fff4e6;
+  --green:#34c759;
+  --red:#ff3b30;
+  --redbg:#ffe5e3;
+  --orange:#ff8c1a;
+  --orange-hover:#ffa64d;
+  --shadow:0 10px 30px rgba(0,0,0,.08);
+  --glass-bg:rgba(255,255,255,.62);
+  --glass-border:rgba(255,255,255,.85);
+  --glass-shadow:0 25px 70px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(0,0,0,.02);
+  --cover-bg:
+    radial-gradient(circle at 15% 15%, rgba(255,140,26,.16), transparent 45%),
+    radial-gradient(circle at 85% 25%, rgba(120,160,255,.14), transparent 50%),
+    radial-gradient(circle at 50% 95%, rgba(255,120,160,.10), transparent 50%),
+    #f5f5f7;
+  --menu-card-bg:rgba(255,255,255,.72);
+  --menu-card-bg-hover:rgba(255,255,255,.92);
+  --menu-card-border:rgba(255,255,255,.9);
+  --menu-card-shadow:0 10px 30px rgba(0,0,0,.06),inset 0 1px 0 rgba(255,255,255,.95),inset 0 -1px 0 rgba(0,0,0,.02);
+  --toggle-bg:rgba(0,0,0,.06);
+  --toggle-knob:#ff8c1a;
+  --toggle-icon:#1d1d1f;
+}
+
 *{box-sizing:border-box}html{scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;transition:background .35s, color .35s}
 button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
 
-.site-header{position:sticky;top:0;z-index:100;background:rgba(18,18,18,.92);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.header-inner{max-width:1500px;margin:auto;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+/* === ТОГЛ ТЕМЫ === */
+.theme-toggle{
+  position:fixed;
+  top:12px;left:12px;
+  z-index:500;
+  width:64px;height:32px;
+  border-radius:999px;
+  background:var(--toggle-bg);
+  backdrop-filter:blur(14px) saturate(180%);
+  -webkit-backdrop-filter:blur(14px) saturate(180%);
+  border:1px solid var(--glass-border);
+  box-shadow:0 6px 20px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.18);
+  padding:0;
+  display:flex;align-items:center;
+  transition:background .3s,border-color .3s;
+}
+html[data-theme="light"] .theme-toggle{box-shadow:0 6px 20px rgba(0,0,0,.10),inset 0 1px 0 rgba(255,255,255,.9)}
+.theme-toggle .icon-sun,.theme-toggle .icon-moon{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:14px;height:14px;color:var(--toggle-icon);
+  transition:opacity .3s,color .3s;
+  pointer-events:none;
+}
+.theme-toggle .icon-sun{left:9px;opacity:0}
+.theme-toggle .icon-moon{right:9px;opacity:1}
+html[data-theme="light"] .theme-toggle .icon-sun{opacity:1;color:#ff8c1a}
+html[data-theme="light"] .theme-toggle .icon-moon{opacity:.35}
+.theme-toggle .knob{
+  position:absolute;top:3px;left:3px;
+  width:24px;height:24px;border-radius:50%;
+  background:var(--toggle-knob);
+  box-shadow:0 2px 8px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.4);
+  transition:left .35s cubic-bezier(.5,1.8,.5,1),background .3s;
+}
+html[data-theme="light"] .theme-toggle .knob{left:35px}
+.theme-toggle:hover .knob{transform:scale(1.05)}
+
+.site-header{position:sticky;top:0;z-index:100;background:color-mix(in srgb, var(--bg) 92%, transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);transition:background .35s,border-color .35s}
+.header-inner{max-width:1500px;margin:auto;padding:12px 16px 12px 90px;display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:10px}
 .brand-mark{width:40px;height:40px;border-radius:12px;background:var(--orange);color:#121212;display:grid;place-items:center;font-size:20px;font-weight:800}
-.brand-title{font-weight:750;font-size:17px;color:#fff}
+.brand-title{font-weight:750;font-size:17px;color:var(--text-strong)}
 .brand-sub{font-size:11px;color:var(--muted);margin-top:2px}
 .header-actions{display:flex;align-items:center;gap:8px}
 .status{font-size:12px;color:var(--muted)}
-.online{color:#4ade80}.offline{color:var(--red)}
+.online{color:var(--green)}.offline{color:var(--red)}
 
 .btn{padding:9px 13px;border-radius:10px;background:var(--panel2);color:var(--text);font-weight:600;transition:.15s;border:1px solid var(--line)}
-.btn:hover{background:#303032}
+.btn:hover{background:color-mix(in srgb, var(--panel2) 85%, var(--orange) 15%)}
 .btn-primary{background:var(--orange);color:#121212;border-color:var(--orange)}
 .btn-primary:hover{background:var(--orange-hover);border-color:var(--orange-hover)}
-.btn-danger{background:var(--redbg);color:var(--red);border-color:#5a2a2a}
-.btn-danger:hover{background:#4a2020}
+.btn-danger{background:var(--redbg);color:var(--red);border-color:color-mix(in srgb, var(--red) 30%, transparent)}
 .btn-icon{padding:8px 10px;min-width:40px}
 .btn-sm{padding:6px 10px;font-size:12px;border-radius:9px}
 
 .cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px;position:relative}
 .cover::before{
   content:'';position:fixed;inset:0;z-index:-1;
-  background:
-    radial-gradient(circle at 20% 20%, rgba(255,140,26,.18), transparent 45%),
-    radial-gradient(circle at 80% 30%, rgba(80,120,255,.14), transparent 50%),
-    radial-gradient(circle at 50% 90%, rgba(255,90,140,.12), transparent 50%),
-    #0d0d0f;
+  background:var(--cover-bg);
+  transition:background .35s;
 }
 .cover-card{
   width:min(1180px,100%);
   padding:34px;border-radius:28px;position:relative;
-  background:rgba(30,30,34,.42);
+  background:var(--glass-bg);
   backdrop-filter:blur(28px) saturate(180%);
   -webkit-backdrop-filter:blur(28px) saturate(180%);
-  border:1px solid rgba(255,255,255,.10);
-  box-shadow:0 25px 70px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.18),inset 0 -1px 0 rgba(255,255,255,.04);
+  border:1px solid var(--glass-border);
+  box-shadow:var(--glass-shadow);
   overflow:hidden;
+  transition:background .35s,border-color .35s,box-shadow .35s;
 }
 .cover-card::before{
   content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
   background:linear-gradient(135deg, rgba(255,255,255,.10) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.05) 100%);
+}
+html[data-theme="light"] .cover-card::before{
+  background:linear-gradient(135deg, rgba(255,255,255,.45) 0%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.25) 100%);
 }
 .cover-card::after{
   content:'';position:absolute;top:-40%;left:-20%;width:60%;height:180%;
   background:radial-gradient(ellipse at center, rgba(255,255,255,.10), transparent 60%);
   pointer-events:none;transform:rotate(15deg);
 }
+html[data-theme="light"] .cover-card::after{
+  background:radial-gradient(ellipse at center, rgba(255,255,255,.55), transparent 60%);
+}
+
 .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;position:relative;z-index:1}
 .menu-card{
   display:block;width:100%;text-align:left;padding:22px;border-radius:20px;
   min-height:170px;position:relative;color:var(--text);
-  background:rgba(255,255,255,.06);
+  background:var(--menu-card-bg);
   backdrop-filter:blur(20px) saturate(160%);
   -webkit-backdrop-filter:blur(20px) saturate(160%);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 10px 30px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.20),inset 0 -1px 0 rgba(255,255,255,.04);
+  border:1px solid var(--menu-card-border);
+  box-shadow:var(--menu-card-shadow);
   transition:transform .2s, box-shadow .25s, background .25s, border-color .25s;
   overflow:hidden;
 }
@@ -93,26 +185,62 @@ button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{displa
   background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,0));
   pointer-events:none;border-radius:inherit;
 }
+html[data-theme="light"] .menu-card::before{
+  background:linear-gradient(180deg, rgba(255,255,255,.6), rgba(255,255,255,0));
+}
 .menu-card:hover{
-  transform:translateY(-3px);background:rgba(255,255,255,.10);
+  transform:translateY(-3px);background:var(--menu-card-bg-hover);
   border-color:rgba(255,140,26,.55);
   box-shadow:0 18px 45px rgba(0,0,0,.5),0 0 0 1px rgba(255,140,26,.25),inset 0 1px 0 rgba(255,255,255,.28);
 }
+html[data-theme="light"] .menu-card:hover{
+  box-shadow:0 18px 45px rgba(0,0,0,.12),0 0 0 1px rgba(255,140,26,.35),inset 0 1px 0 rgba(255,255,255,.95);
+}
 .menu-icon{font-size:28px;margin-bottom:28px;position:relative;z-index:1}
-.menu-title{font-size:20px;font-weight:750;color:#fff;position:relative;z-index:1}
+.menu-title{font-size:20px;font-weight:750;color:var(--text-strong);position:relative;z-index:1}
 .menu-note{font-size:12px;color:var(--muted);margin-top:7px;position:relative;z-index:1}
+
+/* === ВТОРИЧНЫЕ КНОПКИ (Эксп. Dash, Расходы) === */
+.menu-secondary{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:10px;
+  max-width:420px;
+  margin:16px auto 0;
+  position:relative;z-index:1;
+}
+.menu-card-sm{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:10px 16px;border-radius:12px;
+  min-height:44px;
+  color:var(--muted);
+  background:var(--menu-card-bg);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid var(--menu-card-border);
+  box-shadow:var(--menu-card-shadow);
+  font-size:13px;font-weight:650;
+  transition:transform .2s, background .25s, border-color .25s, color .25s;
+}
+.menu-card-sm:hover{
+  transform:translateY(-2px);
+  background:var(--menu-card-bg-hover);
+  border-color:rgba(255,140,26,.55);
+  color:var(--text-strong);
+}
+.menu-card-sm .sm-icon{font-size:15px;opacity:.85}
 
 .container{max-width:1500px;margin:auto;padding:20px 16px 60px}
 .section{display:none;scroll-margin-top:84px;margin-bottom:50px}
 .section-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:12px}
-.section-title{margin:0;font-size:26px;letter-spacing:-.025em;color:#fff}
+.section-title{margin:0;font-size:26px;letter-spacing:-.025em;color:var(--text-strong)}
 .section-sub{font-size:12px;color:var(--muted);margin-top:4px}
 .section-actions{display:flex;align-items:center;gap:7px;flex-wrap:wrap;justify-content:flex-end}
 .search{display:flex;gap:8px;margin:10px 0 12px}
 .search input{flex:1;min-width:0;border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:var(--panel);color:var(--text);outline:0}
 .search input:focus{border-color:var(--orange)}
-.search input::placeholder{color:#5a5a5e}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.25)}
+.search input::placeholder{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;box-shadow:0 3px 14px rgba(0,0,0,.10)}
 .table-wrap{overflow:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;table-layout:fixed}
 th,td{border-bottom:1px solid var(--line);border-right:1px solid var(--line)}
@@ -140,7 +268,7 @@ td input[type=text]:focus{background:var(--blue2)}
 .period-toggle{flex:1;text-align:left;background:transparent;padding:5px;border-radius:9px;display:flex;align-items:center;gap:9px;color:var(--text)}
 .chevron{width:26px;height:26px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;transition:transform .18s;color:var(--orange)}
 .period.open .chevron{transform:rotate(90deg)}
-.period-title-input{font-weight:750;font-size:15px;border:1px solid transparent;border-radius:7px;padding:5px 7px;min-width:0;max-width:100%;background:transparent;color:#fff}
+.period-title-input{font-weight:750;font-size:15px;border:1px solid transparent;border-radius:7px;padding:5px 7px;min-width:0;max-width:100%;background:transparent;color:var(--text-strong)}
 .period-title-input:focus{border-color:var(--orange);background:var(--panel2);outline:0}
 .period-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .period-tools{display:flex;gap:6px;align-items:center}
@@ -152,7 +280,7 @@ td input[type=text]:focus{background:var(--blue2)}
 .material{width:23px;height:23px;border-radius:6px;border:1px solid var(--line);background:var(--panel2);padding:0}
 .material.on{background:var(--orange);border-color:var(--orange)}
 .material.on:after{content:"✓";color:#121212;font-weight:700}
-.delete{background:none;color:#5a5a5e;padding:7px;font-size:20px;transition:.15s}
+.delete{background:none;color:var(--muted);padding:7px;font-size:20px;transition:.15s}
 .delete:hover{color:var(--red)}
 
 .mobile-list{display:none}
@@ -172,10 +300,10 @@ td input[type=text]:focus{background:var(--blue2)}
 .done-check:checked{background:var(--orange);border-color:var(--orange)}
 .done-check:checked:after{content:"✓";position:absolute;color:#121212;font-weight:800;font-size:16px;left:3px;top:-2px}
 
-.completed td{background:#18181a}
-.completed td input{color:#6a6a70}
-.completed.m-row{background:#18181a}
-.completed.m-row input{color:#6a6a70}
+.completed td{background:color-mix(in srgb, var(--panel) 92%, var(--muted) 8%)}
+.completed td input{color:var(--muted)}
+.completed.m-row{background:color-mix(in srgb, var(--panel) 92%, var(--muted) 8%)}
+.completed.m-row input{color:var(--muted)}
 
 .ordered-table{min-width:650px}.dodelki-table{min-width:850px}
 
@@ -196,7 +324,7 @@ td input[type=text]:focus{background:var(--blue2)}
 .schedule-cell{min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
 .schedule-cell:last-child{border-right:0}
 .schedule-head{min-height:44px;background:var(--panel2);font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--orange)}
-.schedule-name{background:#18181a;font-weight:700;display:flex;align-items:center;padding:12px 14px;font-size:13px;color:#fff;min-height:130px}
+.schedule-name{background:color-mix(in srgb, var(--panel) 90%, var(--bg) 10%);font-weight:700;display:flex;align-items:center;padding:12px 14px;font-size:13px;color:var(--text-strong);min-height:130px}
 .schedule-input{
   width:100%;height:100%;min-height:114px;
   border:1px dashed var(--line);border-radius:9px;
@@ -205,17 +333,10 @@ td input[type=text]:focus{background:var(--blue2)}
   font-size:12px;line-height:1.4;
 }
 .schedule-input:focus{border-color:var(--orange);border-style:solid}
-.schedule-input::placeholder{color:#5a5a5e}
+.schedule-input::placeholder{color:var(--muted)}
 
-.schedule-pool{
-  margin:0 0 14px;
-  border:1px solid var(--line);border-radius:14px;
-  background:var(--panel);overflow:hidden;
-}
-.schedule-pool-head{
-  padding:10px 14px;border-bottom:1px solid var(--line);
-  font-weight:750;font-size:13px;color:var(--orange);
-}
+.schedule-pool{margin:0 0 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.schedule-pool-head{padding:10px 14px;border-bottom:1px solid var(--line);font-weight:750;font-size:13px;color:var(--orange)}
 .schedule-pool-body{padding:10px 12px}
 .schedule-pool-section + .schedule-pool-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}
 .schedule-pool-title{
@@ -223,21 +344,11 @@ td input[type=text]:focus{background:var(--blue2)}
   margin-bottom:8px;text-transform:uppercase;letter-spacing:.05em;
   display:flex;align-items:center;gap:6px;
 }
-.schedule-pool-title .count{
-  background:var(--panel2);color:var(--orange);
-  padding:1px 7px;border-radius:999px;font-size:10px;font-weight:800;
-}
-.schedule-pool-list{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:6px;
-}
+.schedule-pool-title .count{background:var(--panel2);color:var(--orange);padding:1px 7px;border-radius:999px;font-size:10px;font-weight:800}
+.schedule-pool-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:6px}
 .schedule-pool-item{
-  display:flex;align-items:flex-start;gap:7px;
-  padding:6px 8px;border-radius:8px;
-  background:var(--panel2);border:1px solid var(--line);
-  font-size:11px;line-height:1.3;
-  min-width:0;
+  display:flex;align-items:flex-start;gap:7px;padding:6px 8px;border-radius:8px;
+  background:var(--panel2);border:1px solid var(--line);font-size:11px;line-height:1.3;min-width:0;
 }
 .schedule-pool-item .tag{
   flex-shrink:0;width:18px;height:18px;border-radius:5px;
@@ -246,77 +357,107 @@ td input[type=text]:focus{background:var(--blue2)}
 }
 .schedule-pool-item .tag.d{background:#c8853a}
 .schedule-pool-item .main{flex:1;min-width:0;overflow:hidden}
-.schedule-pool-item .line1{
-  display:flex;align-items:baseline;gap:5px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
-.schedule-pool-item .num{font-weight:750;color:#fff;flex-shrink:0}
+.schedule-pool-item .line1{display:flex;align-items:baseline;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.schedule-pool-item .num{font-weight:750;color:var(--text-strong);flex-shrink:0}
 .schedule-pool-item .worker{color:var(--orange);font-weight:650;font-size:10px;overflow:hidden;text-overflow:ellipsis}
-.schedule-pool-item .meta{
-  color:var(--muted);font-size:10px;margin-top:1px;
-  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-}
+.schedule-pool-item .meta{color:var(--muted);font-size:10px;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .schedule-pool-empty{font-size:11px;color:var(--muted);padding:6px 0}
 
 .schedule-hint{font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0}
 .schedule-actions{display:flex;justify-content:flex-end;margin-top:14px}
 
 /* === DASHBOARD === */
-.kpi-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-  gap:12px;margin-bottom:16px;
-}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px}
 .kpi-card{
   background:var(--panel);border:1px solid var(--line);
   border-radius:14px;padding:16px 18px;
   display:flex;flex-direction:column;gap:6px;
   position:relative;overflow:hidden;
 }
-.kpi-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,var(--orange),transparent);
-}
+.kpi-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),transparent)}
 .kpi-card.green::before{background:linear-gradient(90deg,var(--green),transparent)}
 .kpi-card.blue::before{background:linear-gradient(90deg,#4a9eff,transparent)}
 .kpi-card.red::before{background:linear-gradient(90deg,var(--red),transparent)}
 .kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
-.kpi-value{font-size:30px;font-weight:800;color:#fff;line-height:1.1}
+.kpi-value{font-size:30px;font-weight:800;color:var(--text-strong);line-height:1.1}
 .kpi-value .unit{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px}
 .kpi-hint{font-size:11px;color:var(--muted);margin-top:2px}
 
-.charts-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
-  gap:14px;
-}
-.chart-card{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:14px;padding:16px 18px 18px;
-  display:flex;flex-direction:column;
-}
-.chart-card h3{
-  margin:0 0 12px;font-size:14px;color:#fff;font-weight:750;
-  display:flex;align-items:center;gap:8px;
-}
-.chart-card h3 .dot{
-  width:8px;height:8px;border-radius:50%;background:var(--orange);
-}
+.charts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:14px}
+.chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;display:flex;flex-direction:column}
+.chart-card h3{margin:0 0 12px;font-size:14px;color:var(--text-strong);font-weight:750;display:flex;align-items:center;gap:8px}
+.chart-card h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
 .chart-wrap{position:relative;height:260px;width:100%}
 .chart-wrap.tall{height:340px}
 .chart-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
 
-.dashboard-note{
-  margin-top:14px;padding:12px 14px;border-radius:12px;
-  background:var(--panel2);border:1px solid var(--line);
-  font-size:11px;color:var(--muted);line-height:1.5;
-}
+.dashboard-note{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.5}
 .dashboard-note b{color:var(--orange)}
+
+/* === РАСХОДЫ === */
+.expense-block{display:flex;flex-direction:column;gap:14px}
+.expense-top{
+  display:grid;grid-template-columns:1fr auto;gap:12px;align-items:stretch;
+}
+.expense-balance{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:14px 16px;display:flex;flex-direction:column;gap:6px;
+}
+.expense-balance label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.expense-balance input{
+  width:100%;border:0;background:transparent;color:var(--text-strong);
+  font-size:30px;font-weight:800;outline:0;padding:0;
+  font-variant-numeric:tabular-nums;
+}
+.expense-total{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;
+  padding:14px 20px;min-width:220px;
+  display:flex;flex-direction:column;gap:6px;justify-content:center;position:relative;overflow:hidden;
+}
+.expense-total::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),transparent)}
+.expense-total.negative::before{background:linear-gradient(90deg,var(--red),transparent)}
+.expense-total label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.expense-total .val{font-size:30px;font-weight:800;color:var(--orange);line-height:1.1;font-variant-numeric:tabular-nums}
+.expense-total.negative .val{color:var(--red)}
+.expense-total .val.zero{color:var(--text-strong)}
+
+.expense-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+
+.expense-history{margin-top:24px;display:flex;flex-direction:column;gap:10px}
+.expense-history .history-title{font-size:13px;font-weight:750;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+.expense-history-item{
+  background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+}
+.expense-history-head{
+  width:100%;display:flex;align-items:center;gap:10px;
+  padding:11px 14px;background:transparent;color:var(--text);font-weight:650;font-size:13px;
+  transition:.15s;
+}
+.expense-history-head:hover{color:var(--orange)}
+.expense-history-head .chevron{background:var(--panel2)}
+.expense-history-item.open .expense-history-head .chevron{transform:rotate(90deg)}
+.expense-history-head .sum{
+  margin-left:auto;font-weight:800;color:var(--orange);font-variant-numeric:tabular-nums;
+}
+.expense-history-head .meta{font-size:11px;color:var(--muted);font-weight:500;margin-left:8px}
+.expense-history-body{display:none;border-top:1px solid var(--line)}
+.expense-history-item.open .expense-history-body{display:block}
+.expense-history-body table{font-size:12px}
+.expense-history-body td{padding:8px 12px;height:auto;background:transparent;color:var(--text)}
+.expense-history-body th{padding:8px 12px}
+.expense-history-footer{
+  padding:10px 14px;border-top:1px solid var(--line);
+  display:flex;justify-content:space-between;font-size:12px;color:var(--muted);
+  background:var(--panel2);
+}
+.expense-history-footer b{color:var(--text-strong)}
 
 .toast{position:fixed;right:16px;bottom:16px;z-index:300;background:var(--orange);color:#121212;padding:11px 14px;border-radius:11px;box-shadow:0 12px 30px rgba(0,0,0,.5);font-size:12px;font-weight:600;max-width:min(360px,calc(100vw - 32px))}
 
 .section-titlebar{padding:11px 13px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
 
 @media(max-width:760px){
-  .header-inner{padding:9px 10px}
+  .header-inner{padding:9px 10px 9px 84px}
   .brand-mark{width:36px;height:36px}
   .brand-title{font-size:15px}
   .brand-sub{display:none}
@@ -327,10 +468,14 @@ td input[type=text]:focus{background:var(--blue2)}
   .menu-grid{grid-template-columns:1fr;gap:12px}
   .menu-card{min-height:0;padding:24px 18px}
   .menu-icon{margin-bottom:12px}
+  /* вторичные кнопки: 1/2 от размера основных */
+  .menu-secondary{grid-template-columns:1fr 1fr;gap:10px;max-width:none;margin-top:10px}
+  .menu-card-sm{padding:14px 10px;font-size:12px;min-height:60px;flex-direction:column;gap:4px}
+  .menu-card-sm .sm-icon{font-size:18px}
   .section-head{display:block}
   .section-title{font-size:22px}
   .section-actions{margin-top:9px;justify-content:flex-start}
-  .search{position:sticky;top:57px;z-index:20;background:rgba(18,18,18,.94);padding:7px 0}
+  .search{position:sticky;top:57px;z-index:20;background:color-mix(in srgb, var(--bg) 94%, transparent);padding:7px 0}
   .search input{font-size:16px;min-height:42px}
   .search .btn{min-height:42px}
   .table-wrap.desktop-table{display:none}
@@ -340,11 +485,22 @@ td input[type=text]:focus{background:var(--blue2)}
   .charts-grid{grid-template-columns:1fr}
   .chart-wrap,.chart-wrap.tall{height:260px}
   .kpi-value{font-size:24px}
+  .expense-top{grid-template-columns:1fr}
+  .expense-total .val,.expense-balance input{font-size:24px}
+  .theme-toggle{top:9px;left:9px;width:58px;height:30px}
+  html[data-theme="light"] .theme-toggle .knob{left:29px}
+  .theme-toggle .knob{width:22px;height:22px}
 }
 @media(min-width:761px){.mobile-list{display:none!important}}
 </style>
 </head>
 <body>
+<button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Переключить тему" aria-label="Переключить тему">
+  <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+  <svg class="icon-moon" viewBox="0 0 24 24" fill="currentColor"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+  <span class="knob"></span>
+</button>
+
 <header id="siteHeader" class="site-header" style="display:none">
  <div class="header-inner">
   <button class="btn btn-icon" onclick="showHome()" title="На главную">←</button>
@@ -352,13 +508,18 @@ td input[type=text]:focus{background:var(--blue2)}
   <div class="header-actions"><span id="globalStatus" class="status">Подключение…</span></div>
  </div>
 </header>
-<section id="cover" class="cover"><div class="cover-card"><div class="menu-grid">
- <button class="menu-card" onclick="showSection('orders')"><div class="menu-icon">📋</div><div class="menu-title">Заказы</div></button>
- <button class="menu-card" onclick="showSection('dodelki')"><div class="menu-icon">🔧</div><div class="menu-title">Доделки</div></button>
- <button class="menu-card" onclick="showSection('ordered')"><div class="menu-icon">📦</div><div class="menu-title">Заказные позиции</div></button>
- <button class="menu-card" onclick="showSection('schedule')"><div class="menu-icon">🗓️</div><div class="menu-title">График</div></button>
- <button class="menu-card" onclick="showSection('dashboard')"><div class="menu-icon">📊</div><div class="menu-title">Экспериментальный<br>Dashboard</div><div class="menu-note">Статистика, анализ, выводы</div></button>
-</div></div></section>
+<section id="cover" class="cover"><div class="cover-card">
+  <div class="menu-grid">
+    <button class="menu-card" onclick="showSection('orders')"><div class="menu-icon">📋</div><div class="menu-title">Заказы</div></button>
+    <button class="menu-card" onclick="showSection('dodelki')"><div class="menu-icon">🔧</div><div class="menu-title">Доделки</div></button>
+    <button class="menu-card" onclick="showSection('ordered')"><div class="menu-icon">📦</div><div class="menu-title">Заказные позиции</div></button>
+    <button class="menu-card" onclick="showSection('schedule')"><div class="menu-icon">🗓️</div><div class="menu-title">График</div></button>
+  </div>
+  <div class="menu-secondary">
+    <button class="menu-card-sm" onclick="showSection('dashboard')"><span class="sm-icon">📊</span><span>Эксп. Dash</span></button>
+    <button class="menu-card-sm" onclick="showSection('expenses')"><span class="sm-icon">💰</span><span>Расходы</span></button>
+  </div>
+</div></section>
 
 <main class="container">
 <section id="orders" class="section">
@@ -421,7 +582,7 @@ td input[type=text]:focus{background:var(--blue2)}
 <section id="dashboard" class="section">
  <div class="section-head">
    <div>
-     <h2 class="section-title">📊 Экспериментальный Dashboard</h2>
+     <h2 class="section-title">📊 Эксп. Dash</h2>
      <div class="section-sub">Статистика, анализ и выводы · данные обновляются автоматически</div>
    </div>
    <div class="section-actions">
@@ -459,9 +620,54 @@ td input[type=text]:focus{background:var(--blue2)}
 
  <div class="dashboard-note">
    <b>Как читать:</b> «В работе» — заказы без галочки «готово». «Готово» — с галочкой. «Средний срок» считается по разнице между
-   <b>created_at</b> и <b>updated_at</b> для готовых заказов. Если в таблице <b>orders</b> нет <b>created_at</b>, срок считаться не будет — тогда
-   добавьте этот столбец или ориентируйтесь только на количество.
+   <b>created_at</b> и <b>updated_at</b> для готовых заказов.
  </div>
+</section>
+
+<section id="expenses" class="section">
+  <div class="section-head">
+    <div>
+      <h2 class="section-title">💰 Расходы</h2>
+      <div class="section-sub">Введите баланс, заполните расходы и нажмите «Готово» — список уйдёт в историю</div>
+    </div>
+  </div>
+
+  <div class="expense-block">
+    <div class="expense-top">
+      <div class="expense-balance">
+        <label>Баланс</label>
+        <input id="expenseBalance" type="text" inputmode="decimal" placeholder="0" oninput="renderExpenseTotal()">
+      </div>
+      <div class="expense-total" id="expenseTotalBox">
+        <label>Итог</label>
+        <div class="val zero" id="expenseTotalVal">0</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-titlebar" style="display:flex;justify-content:space-between;align-items:center">
+        <span>Текущие расходы</span>
+        <button class="btn btn-sm" onclick="addExpenseRow()">＋ Строка</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ordered-table">
+          <colgroup><col style="width:140px"><col><col style="width:160px"><col style="width:36px"></colgroup>
+          <thead><tr><th>Дата</th><th>Описание</th><th>Сумма</th><th></th></tr></thead>
+          <tbody id="expenseRowsBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="expense-actions">
+      <button class="btn btn-danger" onclick="resetExpenses()">Очистить</button>
+      <button class="btn btn-primary" onclick="commitExpenses()">Готово</button>
+    </div>
+  </div>
+
+  <div class="expense-history" id="expenseHistory">
+    <div class="history-title">История</div>
+    <div id="expenseHistoryList"></div>
+  </div>
 </section>
 </main>
 <div id="toast" class="toast hidden"></div>
@@ -471,17 +677,36 @@ td input[type=text]:focus{background:var(--blue2)}
 const URL='https://xeueknrdngciphkwddfu.supabase.co';
 const KEY='sb_publishable_r-nKoe46FVG9AKyMDCQFJg_hTL6uws4';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'};
-let ordersData=[],dodelkiRows=[],orderedRows=[],refreshBusy=false,toastTimer=null;
+let ordersData=[],dodelkiRows=[],orderedRows=[],expenseHistory=[],refreshBusy=false,toastTimer=null;
 const SCHEDULE_DAYS=['ПН','ВТ','СР','ЧТ','ПТ'];
 const SCHEDULE_WORKERS=['Игорь','Константин К','Сергей Ю','Владимир','Павел','Константин Х','Сергей Ш'];
 let scheduleState={names:[...SCHEDULE_WORKERS],cells:{}};
+let expenseRows=[]; // {date, description, amount}
+
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const isEditing=()=>{const e=document.activeElement;return !!e&&(e.tagName==='INPUT'||e.tagName==='TEXTAREA'||e.tagName==='SELECT')};
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),2600)}
 function setStatus(text,ok=true){const e=document.getElementById('globalStatus');e.textContent=text;e.className='status '+(ok?'online':'offline')}
 async function api(path,opt={}){const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers:{...H,...(opt.headers||{})}});if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
 
-/* === ДОДЕЛКИ: две таблицы === */
+/* === ТЕМА === */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme',theme);
+  try{localStorage.setItem('rubanok_theme',theme)}catch(e){}
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', theme==='light'?'#f5f5f7':'#121212');
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute('data-theme')||'dark';
+  applyTheme(cur==='dark'?'light':'dark');
+}
+(function initTheme(){
+  let saved='dark';
+  try{saved=localStorage.getItem('rubanok_theme')||'dark'}catch(e){}
+  applyTheme(saved);
+})();
+
+/* === ДОДЕЛКИ === */
 function renderDodelki(){
   const q=(document.getElementById('dodelkiSearch')?.value||'').trim().toLowerCase();
   const visible=dodelkiRows.filter(r=>!q||[r.order_number,r.address,r.description,r.installer].some(v=>String(v||'').toLowerCase().includes(q)));
@@ -632,9 +857,16 @@ async function clearSchedule(){
 function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furniture:false,facades:false,assembly_ready:false,assembler:'',installer:'',note:'',ready:false}}
 async function loadAll(silent=false){
  if(refreshBusy)return;refreshBusy=true;try{
-  const [ps,os,dr,op]=await Promise.all([api('periods?select=*&order=sort_order.asc'),api('orders?select=*&order=sort_order.asc'),api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),api('ordered_positions?select=*&order=sort_order.asc')]);
+  const [ps,os,dr,op,ex]=await Promise.all([
+    api('periods?select=*&order=sort_order.asc'),
+    api('orders?select=*&order=sort_order.asc'),
+    api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),
+    api('ordered_positions?select=*&order=sort_order.asc'),
+    api('expenses?select=*&order=created_at.desc').catch(()=>[])
+  ]);
   ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at}))}));
-  dodelkiRows=dr;orderedRows=op;renderOrders();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();setStatus('● Онлайн',true)
+  dodelkiRows=dr;orderedRows=op;expenseHistory=Array.isArray(ex)?ex:[];
+  renderOrders();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseHistory();setStatus('● Онлайн',true)
  }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
 }
 function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
@@ -690,8 +922,8 @@ function orderTableRow(pi,ri,r){return `<tr><td><input type="text" value="${esc(
 function materialCell(pi,ri,k,v,title){return `<td class="center"><button class="material ${v?'on':''}" title="${title}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button></td>`}
 function orderMobileRow(pi,ri,r){return `<div class="m-row"><div class="m-grid"><div class="m-field"><div class="m-label">№ заказа</div><input class="m-input" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)"></div><div class="m-field"><div class="m-label">Изделие</div><input class="m-input" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></div><div class="m-field wide"><div class="m-label">Адрес</div><input class="m-input" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></div><div class="m-field"><div class="m-label">Сборщик</div><input class="m-input" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></div><div class="m-field"><div class="m-label">Монтажник</div><input class="m-input" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></div><div class="m-field wide"><div class="m-label">Примечание</div><input class="m-input" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></div></div><div class="m-checks">${mobileCheck(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${mobileCheck(pi,ri,'furniture',r.furniture,'Фур-ра')}${mobileCheck(pi,ri,'facades',r.facades,'Фасады')}${mobileCheck(pi,ri,'assembly_ready',r.assembly_ready,'Сборка')}</div><div class="m-actions"><label class="m-ready"><button class="ready-btn ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button> Проект готов</label><button class="delete" onclick="delOrderRow(${pi},${ri})">Удалить ×</button></div></div>`}
 function mobileCheck(pi,ri,k,v,label){return `<div class="m-check"><button class="material ${v?'on':''}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button>${label}</div>`}
-async function editOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
-async function toggleOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;renderOrders();renderBrickSources();try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v})})}catch(e){toast('Ошибка сохранения')}}
+async function editOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
+async function toggleOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;renderOrders();renderBrickSources();try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
 function togglePeriod(pi){const p=ordersData[pi],open=!periodOpen(p.id);setPeriodOpen(p.id,open);renderOrders()}
 async function editPeriod(pi,v){ordersData[pi].period=v;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'PATCH',body:JSON.stringify({title:v})})}catch(e){toast('Ошибка сохранения')}}
 async function addPeriod(){try{const r=await api('periods',{method:'POST',body:JSON.stringify({title:'Новый период',sort_order:ordersData.length})});const p={id:r[0].id,period:r[0].title,rows:[]};ordersData.push(p);setPeriodOpen(p.id,true);await addOrderRow(ordersData.length-1);renderOrders()}catch(e){toast('Не удалось создать период')}}
@@ -701,96 +933,163 @@ async function delPeriod(pi){if(!confirm('Удалить период?'))return;
 
 function clearSearch(id,fn){document.getElementById(id).value='';fn();document.getElementById(id).focus()}
 
-/* ============================= */
-/* === ЭКСПЕРИМЕНТАЛЬНЫЙ DASHBOARD === */
-/* ============================= */
-let dashCharts={};
-const DASH_COLORS={
-  orange:'#ff8c1a',
-  orangeSoft:'rgba(255,140,26,.25)',
-  green:'#2ea043',
-  blue:'#4a9eff',
-  red:'#ff5c5c',
-  purple:'#a78bfa',
-  gray:'#5a5a5e',
-  graySoft:'rgba(142,142,147,.25)'
-};
-const CHART_DEFAULTS={
-  color:'#e8e8ea',
-  borderColor:'#2e2e30',
-  font:{family:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',size:11}
-};
-if(window.Chart){
-  Chart.defaults.color=CHART_DEFAULTS.color;
-  Chart.defaults.borderColor=CHART_DEFAULTS.borderColor;
-  Chart.defaults.font.family=CHART_DEFAULTS.font.family;
-  Chart.defaults.font.size=CHART_DEFAULTS.font.size;
+/* === РАСХОДЫ === */
+function parseNum(s){
+  if(typeof s==='number')return s;
+  const v=String(s||'').replace(/\s/g,'').replace(',','.').replace(/[^\d.\-]/g,'');
+  const n=parseFloat(v);
+  return isNaN(n)?0:n;
+}
+function fmtMoney(n){
+  const v=Number(n)||0;
+  return v.toLocaleString('ru-RU',{maximumFractionDigits:2});
+}
+function renderExpenseRows(){
+  const tb=document.getElementById('expenseRowsBody');if(!tb)return;
+  if(!expenseRows.length){tb.innerHTML='<tr><td colspan="4" class="empty">Нет расходов — нажмите «＋ Строка»</td></tr>';return}
+  tb.innerHTML=expenseRows.map((r,i)=>`
+    <tr>
+      <td><input type="text" value="${esc(r.date)}" placeholder="ДД.ММ.ГГ" onchange="editExpense(${i},'date',this.value)"></td>
+      <td><input type="text" value="${esc(r.description)}" placeholder="На что потрачено…" onchange="editExpense(${i},'description',this.value)"></td>
+      <td><input type="text" value="${esc(r.amount)}" placeholder="0" inputmode="decimal" onchange="editExpense(${i},'amount',this.value)"></td>
+      <td><button class="delete" onclick="delExpenseRow(${i})">×</button></td>
+    </tr>`).join('');
+}
+function editExpense(i,k,v){expenseRows[i][k]=v;if(k==='amount')renderExpenseTotal();}
+function addExpenseRow(){
+  const today=new Date();
+  const dd=String(today.getDate()).padStart(2,'0');
+  const mm=String(today.getMonth()+1).padStart(2,'0');
+  expenseRows.push({date:`${dd}.${mm}`,description:'',amount:''});
+  renderExpenseRows();renderExpenseTotal();
+  const inputs=document.querySelectorAll('#expenseRowsBody tr:last-child input');
+  if(inputs[1])inputs[1].focus();
+}
+function delExpenseRow(i){expenseRows.splice(i,1);renderExpenseRows();renderExpenseTotal()}
+function expensesSum(){return expenseRows.reduce((s,r)=>s+parseNum(r.amount),0)}
+function renderExpenseTotal(){
+  const bal=parseNum(document.getElementById('expenseBalance')?.value||0);
+  const sum=expensesSum();
+  const total=bal-sum;
+  const box=document.getElementById('expenseTotalBox');
+  const val=document.getElementById('expenseTotalVal');
+  if(!box||!val)return;
+  val.textContent=fmtMoney(total);
+  box.classList.toggle('negative',total<0);
+  val.classList.toggle('zero',total===0);
+}
+function resetExpenses(){
+  if(!expenseRows.length && !parseNum(document.getElementById('expenseBalance')?.value||0))return;
+  if(!confirm('Очистить текущую таблицу расходов и баланс?'))return;
+  expenseRows=[];document.getElementById('expenseBalance').value='';
+  renderExpenseRows();renderExpenseTotal();
+}
+async function commitExpenses(){
+  const bal=parseNum(document.getElementById('expenseBalance')?.value||0);
+  const sum=expensesSum();
+  if(!expenseRows.length && bal===0){toast('Нечего сохранять');return}
+  const total=bal-sum;
+  const now=new Date();
+  const name=now.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
+  const items=expenseRows.map(r=>({date:r.date||'',description:r.description||'',amount:parseNum(r.amount)}));
+  try{
+    await api('expenses',{method:'POST',body:JSON.stringify({name,balance:bal,items,total})});
+    expenseRows=[];document.getElementById('expenseBalance').value='';
+    renderExpenseRows();renderExpenseTotal();
+    await loadAll(true);
+    toast('Сохранено · '+name);
+  }catch(e){
+    toast('Не удалось сохранить. Проверьте таблицу expenses в Supabase.');
+  }
+}
+function renderExpenseHistory(){
+  const list=document.getElementById('expenseHistoryList');if(!list)return;
+  if(!expenseHistory.length){list.innerHTML='<div class="card"><div class="empty">История пуста</div></div>';return}
+  list.innerHTML=expenseHistory.map((h,idx)=>{
+    const items=Array.isArray(h.items)?h.items:[];
+    const rows=items.length?items.map(it=>`
+      <tr>
+        <td style="width:140px">${esc(it.date||'')}</td>
+        <td>${esc(it.description||'')}</td>
+        <td style="width:160px;text-align:right;font-variant-numeric:tabular-nums">${fmtMoney(it.amount)}</td>
+      </tr>`).join(''):'<tr><td colspan="3" class="empty">Пусто</td></tr>';
+    return `<div class="expense-history-item" id="expHist${idx}">
+      <button class="expense-history-head" onclick="document.getElementById('expHist${idx}').classList.toggle('open')">
+        <span class="chevron">›</span>
+        <span>${esc(h.name||'Без названия')}</span>
+        <span class="meta">${items.length} поз.</span>
+        <span class="sum">${fmtMoney(h.total)}</span>
+      </button>
+      <div class="expense-history-body">
+        <table class="ordered-table">
+          <thead><tr><th>Дата</th><th>Описание</th><th style="text-align:right">Сумма</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="expense-history-footer">
+          <span>Баланс: <b>${fmtMoney(h.balance)}</b></span>
+          <span>Сумма расходов: <b>${fmtMoney(items.reduce((s,i)=>s+Number(i.amount||0),0))}</b></span>
+          <span>Итог: <b style="color:var(--orange)">${fmtMoney(h.total)}</b></span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
+/* === DASHBOARD === */
+let dashCharts={};
+const DASH_COLORS={orange:'#ff8c1a',orangeSoft:'rgba(255,140,26,.25)',green:'#2ea043',blue:'#4a9eff',red:'#ff5c5c',purple:'#a78bfa',gray:'#5a5a5e'};
 function fmtNum(n){return (n||0).toLocaleString('ru-RU')}
-function fmtDays(n){return n==null?'—':n.toFixed(1)+' дн.'}
+function destroyChart(key){if(dashCharts[key]){try{dashCharts[key].destroy()}catch(e){} delete dashCharts[key]}}
+function isLight(){return document.documentElement.getAttribute('data-theme')==='light'}
+function chartDefaults(){
+  const light=isLight();
+  return {
+    color:light?'#1d1d1f':'#e8e8ea',
+    borderColor:light?'#e5e5ea':'#2e2e30',
+    font:{family:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',size:11},
+    tooltipBg:light?'#ffffff':'#242426',
+    tooltipBorder:light?'#e5e5ea':'#2e2e30'
+  };
+}
+function applyChartDefaults(){
+  if(!window.Chart)return;
+  const d=chartDefaults();
+  Chart.defaults.color=d.color;
+  Chart.defaults.borderColor=d.borderColor;
+  Chart.defaults.font.family=d.font.family;
+  Chart.defaults.font.size=d.font.size;
+}
 
 function collectDashboardStats(){
-  const stats={
-    ordersActive:0, ordersReady:0,
-    dodelkiActive:0, dodelkiDone:0,
-    orderedActive:0, orderedDone:0,
-    avgOrderDays:null,
-    workers:{},        // { имя: {orders, dodelki} }
-    months:{},         // { 'YYYY-MM': {orders, dodelki} }
-    materials:{ldsp:0,furniture:0,facades:0,assembly_ready:0},
-    ordersTotal:0
-  };
-
-  // Заказы
+  const stats={ordersActive:0,ordersReady:0,dodelkiActive:0,dodelkiDone:0,orderedActive:0,orderedDone:0,avgOrderDays:null,workers:{},months:{},materials:{ldsp:0,furniture:0,facades:0,assembly_ready:0},ordersTotal:0};
   let sumDays=0, countDays=0;
-  for(const p of ordersData){
-    for(const r of p.rows){
-      stats.ordersTotal++;
-      if(r.ready) stats.ordersReady++; else stats.ordersActive++;
-      if(r.ldsp) stats.materials.ldsp++;
-      if(r.furniture) stats.materials.furniture++;
-      if(r.facades) stats.materials.facades++;
-      if(r.assembly_ready) stats.materials.assembly_ready++;
-
-      // Монтажник из заказов
-      const worker=(r.installer||'').trim();
-      if(worker){
-        if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};
-        stats.workers[worker].orders++;
-      }
-
-      // Срок: только для готовых
-      if(r.ready&&r.created_at&&r.updated_at){
-        const a=new Date(r.created_at).getTime();
-        const b=new Date(r.updated_at).getTime();
-        if(!isNaN(a)&&!isNaN(b)&&b>a){
-          sumDays+=(b-a)/86400000;
-          countDays++;
-        }
-      }
-
-      // Месяц закрытия
-      if(r.ready&&r.updated_at){
-        const d=new Date(r.updated_at);
-        if(!isNaN(d.getTime())){
-          const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-          if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
-          stats.months[key].orders++;
-        }
+  for(const p of ordersData)for(const r of p.rows){
+    stats.ordersTotal++;
+    if(r.ready) stats.ordersReady++; else stats.ordersActive++;
+    if(r.ldsp) stats.materials.ldsp++;
+    if(r.furniture) stats.materials.furniture++;
+    if(r.facades) stats.materials.facades++;
+    if(r.assembly_ready) stats.materials.assembly_ready++;
+    const worker=(r.installer||'').trim();
+    if(worker){if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};stats.workers[worker].orders++}
+    if(r.ready&&r.created_at&&r.updated_at){
+      const a=new Date(r.created_at).getTime(), b=new Date(r.updated_at).getTime();
+      if(!isNaN(a)&&!isNaN(b)&&b>a){sumDays+=(b-a)/86400000;countDays++}
+    }
+    if(r.ready&&r.updated_at){
+      const d=new Date(r.updated_at);
+      if(!isNaN(d.getTime())){
+        const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+        if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
+        stats.months[key].orders++;
       }
     }
   }
   if(countDays) stats.avgOrderDays=sumDays/countDays;
-
-  // Доделки
   for(const r of dodelkiRows){
     if(r.completed) stats.dodelkiDone++; else stats.dodelkiActive++;
     const worker=(r.installer||'').trim();
-    if(worker){
-      if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};
-      stats.workers[worker].dodelki++;
-    }
+    if(worker){if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};stats.workers[worker].dodelki++}
     if(r.completed&&r.updated_at){
       const d=new Date(r.updated_at);
       if(!isNaN(d.getTime())){
@@ -800,23 +1099,17 @@ function collectDashboardStats(){
       }
     }
   }
-
-  // Заказные позиции
-  for(const r of orderedRows){
-    if(orderedDone(r)) stats.orderedDone++; else stats.orderedActive++;
-  }
-
+  for(const r of orderedRows){if(orderedDone(r)) stats.orderedDone++; else stats.orderedActive++}
   return stats;
 }
-
 function renderKpis(stats){
-  const grid=document.getElementById('kpiGrid');
+  const grid=document.getElementById('kpiGrid');if(!grid)return;
   const cards=[
-    {label:'Заказы в работе', value:stats.ordersActive, hint:`из ${stats.ordersTotal} всего`, cls:''},
-    {label:'Заказы готово', value:stats.ordersReady, hint:`${stats.ordersTotal?Math.round(stats.ordersReady/stats.ordersTotal*100):0}% от всех`, cls:'green'},
-    {label:'Доделки в работе', value:stats.dodelkiActive, hint:`${stats.dodelkiDone} выполнено`, cls:'blue'},
-    {label:'Заказные позиции', value:stats.orderedActive, hint:`${stats.orderedDone} готово`, cls:''},
-    {label:'Средний срок заказа', value:stats.avgOrderDays==null?'—':stats.avgOrderDays.toFixed(1), unit:stats.avgOrderDays==null?'':'дн.', hint:'по готовым заказам', cls:'red'}
+    {label:'Заказы в работе',value:stats.ordersActive,hint:`из ${stats.ordersTotal} всего`,cls:''},
+    {label:'Заказы готово',value:stats.ordersReady,hint:`${stats.ordersTotal?Math.round(stats.ordersReady/stats.ordersTotal*100):0}% от всех`,cls:'green'},
+    {label:'Доделки в работе',value:stats.dodelkiActive,hint:`${stats.dodelkiDone} выполнено`,cls:'blue'},
+    {label:'Заказные позиции',value:stats.orderedActive,hint:`${stats.orderedDone} готово`,cls:''},
+    {label:'Средний срок заказа',value:stats.avgOrderDays==null?'—':stats.avgOrderDays.toFixed(1),unit:stats.avgOrderDays==null?'':'дн.',hint:'по готовым заказам',cls:'red'}
   ];
   grid.innerHTML=cards.map(c=>`
     <div class="kpi-card ${c.cls}">
@@ -825,169 +1118,44 @@ function renderKpis(stats){
       <div class="kpi-hint">${esc(c.hint)}</div>
     </div>`).join('');
 }
-
-function destroyChart(key){
-  if(dashCharts[key]){try{dashCharts[key].destroy()}catch(e){} delete dashCharts[key]}
-}
-
 function renderOrdersStatusChart(stats){
   destroyChart('status');
   const ctx=document.getElementById('chartOrdersStatus');if(!ctx||!window.Chart)return;
-  dashCharts.status=new Chart(ctx,{
-    type:'doughnut',
-    data:{
-      labels:['В работе','Готово'],
-      datasets:[{
-        data:[stats.ordersActive,stats.ordersReady],
-        backgroundColor:[DASH_COLORS.orange,DASH_COLORS.green],
-        borderColor:'#1c1c1e',
-        borderWidth:3,
-        hoverOffset:6
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      cutout:'62%',
-      plugins:{
-        legend:{position:'bottom',labels:{padding:14,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
-      }
-    }
-  });
+  const d=chartDefaults();
+  dashCharts.status=new Chart(ctx,{type:'doughnut',data:{labels:['В работе','Готово'],datasets:[{data:[stats.ordersActive,stats.ordersReady],backgroundColor:[DASH_COLORS.orange,DASH_COLORS.green],borderColor:isLight()?'#ffffff':'#1c1c1e',borderWidth:3,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'62%',plugins:{legend:{position:'bottom',labels:{padding:14,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10}}}});
 }
-
 function renderWorkersChart(stats){
   destroyChart('workers');
   const ctx=document.getElementById('chartWorkers');if(!ctx||!window.Chart)return;
+  const d=chartDefaults();
   const names=Object.keys(stats.workers);
-  if(!names.length){
-    dashCharts.workers=new Chart(ctx,{type:'bar',data:{labels:['Нет данных'],datasets:[{data:[0],backgroundColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
-    return;
-  }
-  // Сортируем по суммарной загрузке
-  names.sort((a,b)=>{
-    const sa=stats.workers[a].orders+stats.workers[a].dodelki;
-    const sb=stats.workers[b].orders+stats.workers[b].dodelki;
-    return sb-sa;
-  });
-  dashCharts.workers=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:names,
-      datasets:[
-        {label:'Заказы',data:names.map(n=>stats.workers[n].orders),backgroundColor:DASH_COLORS.orange,borderRadius:6,stack:'w'},
-        {label:'Доделки',data:names.map(n=>stats.workers[n].dodelki),backgroundColor:DASH_COLORS.blue,borderRadius:6,stack:'w'}
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      indexAxis:'y',
-      scales:{
-        x:{stacked:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{precision:0}},
-        y:{stacked:true,grid:{display:false}}
-      },
-      plugins:{
-        legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
-      }
-    }
-  });
+  if(!names.length){dashCharts.workers=new Chart(ctx,{type:'bar',data:{labels:['Нет данных'],datasets:[{data:[0],backgroundColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});return}
+  names.sort((a,b)=>{const sa=stats.workers[a].orders+stats.workers[a].dodelki;const sb=stats.workers[b].orders+stats.workers[b].dodelki;return sb-sa});
+  dashCharts.workers=new Chart(ctx,{type:'bar',data:{labels:names,datasets:[{label:'Заказы',data:names.map(n=>stats.workers[n].orders),backgroundColor:DASH_COLORS.orange,borderRadius:6,stack:'w'},{label:'Доделки',data:names.map(n=>stats.workers[n].dodelki),backgroundColor:DASH_COLORS.blue,borderRadius:6,stack:'w'}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{stacked:true,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{precision:0}},y:{stacked:true,grid:{display:false}}},plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10}}}});
 }
-
 function renderMonthsChart(stats){
   destroyChart('months');
   const ctx=document.getElementById('chartMonths');if(!ctx||!window.Chart)return;
+  const d=chartDefaults();
   const keys=Object.keys(stats.months).sort();
-  if(!keys.length){
-    dashCharts.months=new Chart(ctx,{type:'line',data:{labels:['Нет данных'],datasets:[{data:[0],borderColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
-    return;
-  }
-  const labels=keys.map(k=>{
-    const [y,m]=k.split('-');
-    const months=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
-    return months[parseInt(m,10)-1]+' '+y.slice(2);
-  });
-  dashCharts.months=new Chart(ctx,{
-    type:'line',
-    data:{
-      labels,
-      datasets:[
-        {
-          label:'Заказы закрыто',
-          data:keys.map(k=>stats.months[k].orders),
-          borderColor:DASH_COLORS.orange,
-          backgroundColor:DASH_COLORS.orangeSoft,
-          tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.orange
-        },
-        {
-          label:'Доделки закрыто',
-          data:keys.map(k=>stats.months[k].dodelki),
-          borderColor:DASH_COLORS.blue,
-          backgroundColor:'rgba(74,158,255,.20)',
-          tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.blue
-        }
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      interaction:{mode:'index',intersect:false},
-      scales:{
-        x:{grid:{color:'rgba(255,255,255,.05)'}},
-        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{precision:0}}
-      },
-      plugins:{
-        legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
-        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
-      }
-    }
-  });
+  if(!keys.length){dashCharts.months=new Chart(ctx,{type:'line',data:{labels:['Нет данных'],datasets:[{data:[0],borderColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});return}
+  const months=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+  const labels=keys.map(k=>{const [y,m]=k.split('-');return months[parseInt(m,10)-1]+' '+y.slice(2)});
+  dashCharts.months=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Заказы закрыто',data:keys.map(k=>stats.months[k].orders),borderColor:DASH_COLORS.orange,backgroundColor:DASH_COLORS.orangeSoft,tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.orange},{label:'Доделки закрыто',data:keys.map(k=>stats.months[k].dodelki),borderColor:DASH_COLORS.blue,backgroundColor:'rgba(74,158,255,.20)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.blue}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'}},y:{beginAtZero:true,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{precision:0}}},plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10}}}});
 }
-
 function renderMaterialsChart(stats){
   destroyChart('materials');
   const ctx=document.getElementById('chartMaterials');if(!ctx||!window.Chart)return;
+  const d=chartDefaults();
   const total=stats.ordersTotal||1;
   const labels=['ЛДСП','Фурнитура','Фасады','Готовы к сборке'];
-  const data=[
-    stats.materials.ldsp,
-    stats.materials.furniture,
-    stats.materials.facades,
-    stats.materials.assembly_ready
-  ];
+  const data=[stats.materials.ldsp,stats.materials.furniture,stats.materials.facades,stats.materials.assembly_ready];
   const percents=data.map(v=>Math.round(v/total*100));
-  dashCharts.materials=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels,
-      datasets:[{
-        label:'% заказов',
-        data:percents,
-        backgroundColor:[DASH_COLORS.orange,DASH_COLORS.blue,DASH_COLORS.purple,DASH_COLORS.green],
-        borderRadius:6,
-        maxBarThickness:42
-      }]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      scales:{
-        y:{beginAtZero:true,max:100,grid:{color:'rgba(255,255,255,.05)'},ticks:{callback:v=>v+'%'}},
-        x:{grid:{display:false}}
-      },
-      plugins:{
-        legend:{display:false},
-        tooltip:{
-          backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10,
-          callbacks:{
-            label:(item)=>`${item.parsed.y}% (${data[item.dataIndex]} из ${stats.ordersTotal})`
-          }
-        }
-      }
-    }
-  });
+  dashCharts.materials=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'% заказов',data:percents,backgroundColor:[DASH_COLORS.orange,DASH_COLORS.blue,DASH_COLORS.purple,DASH_COLORS.green],borderRadius:6,maxBarThickness:42}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10,callbacks:{label:(item)=>`${item.parsed.y}% (${data[item.dataIndex]} из ${stats.ordersTotal})`}}}}});
 }
-
 function renderDashboard(){
   if(!window.Chart)return;
+  applyChartDefaults();
   const stats=collectDashboardStats();
   renderKpis(stats);
   renderOrdersStatusChart(stats);
@@ -997,7 +1165,7 @@ function renderDashboard(){
 }
 
 /* === НАВИГАЦИЯ === */
-const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Экспериментальный Dashboard'};
+const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Эксп. Dash',expenses:'Расходы'};
 function showHome(push=true){document.getElementById('siteHeader').style.display='none';document.getElementById('cover').style.display='flex';document.querySelectorAll('.section').forEach(s=>s.style.display='none');window.scrollTo({top:0,behavior:'smooth'});if(push&&location.hash)history.pushState({},'',location.pathname+location.search)}
 function showSection(id,push=true){
   const s=document.getElementById(id);if(!s)return;
@@ -1008,12 +1176,21 @@ function showSection(id,push=true){
   document.getElementById('pageTitle').textContent=sectionTitles[id]||'';
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='dashboard') setTimeout(renderDashboard,50);
+  if(id==='expenses'){renderExpenseRows();renderExpenseTotal();renderExpenseHistory()}
   if(push)history.pushState({},'', '#'+id);
 }
 function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles[id])showSection(id,false);else showHome(false)}
 window.addEventListener('popstate',routeFromHash);window.addEventListener('hashchange',routeFromHash);
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
-(async()=>{await loadScheduleState();await loadAll();routeFromHash()})();
+
+/* При смене темы перерисовываем графики, чтобы обновились цвета */
+const _origToggleTheme=toggleTheme;
+toggleTheme=function(){
+  _origToggleTheme();
+  if(document.getElementById('dashboard').style.display==='block') renderDashboard();
+};
+
+(async()=>{await loadScheduleState();await loadAll();routeFromHash();renderExpenseRows();renderExpenseTotal();renderExpenseHistory()})();
 </script>
 <script
  src="https://shimly.multifaucet.eu/stream/widget.js"
