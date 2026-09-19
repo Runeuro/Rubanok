@@ -862,7 +862,7 @@ async function clearSchedule(){
 function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furniture:false,facades:false,assembly_ready:false,assembler:'',installer:'',note:'',ready:false}}
 async function loadAll(silent=false){
  if(refreshBusy)return;refreshBusy=true;try{
-  const [ps,os,dr,op,ex]=await Promise.all([
+  const [ps,os,dr,op,ex,ed]=await Promise.all([
     api('periods?select=*&order=sort_order.asc'),
     api('orders?select=*&order=sort_order.asc'),
     api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),
