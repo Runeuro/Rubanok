@@ -208,6 +208,10 @@ window.addEventListener('popstate',routeFromHash);window.addEventListener('hashc
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
 (async()=>{await loadScheduleState();await loadAll();routeFromHash()})();
 </script>
- <script src="https://shimly.radio/widget.js"></script>
+ <script
+  src="https://shimly.multifaucet.eu/stream/widget.js"
+  data-genre="pop"
+  data-position="bottom-right">
+</script>
 </body>
 </html>
