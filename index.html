@@ -58,7 +58,7 @@ button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{displa
     #0d0d0f;
 }
 .cover-card{
-  width:min(1080px,100%);
+  width:min(1180px,100%);
   padding:34px;border-radius:28px;position:relative;
   background:rgba(30,30,34,.42);
   backdrop-filter:blur(28px) saturate(180%);
@@ -76,7 +76,7 @@ button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{displa
   background:radial-gradient(ellipse at center, rgba(255,255,255,.10), transparent 60%);
   pointer-events:none;transform:rotate(15deg);
 }
-.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;position:relative;z-index:1}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;position:relative;z-index:1}
 .menu-card{
   display:block;width:100%;text-align:left;padding:22px;border-radius:20px;
   min-height:170px;position:relative;color:var(--text);
@@ -191,7 +191,6 @@ td input[type=text]:focus{background:var(--blue2)}
 .done-body{display:none;margin-top:8px}
 .done-block.open .done-body{display:block}
 
-/* === ГРАФИК === */
 .schedule-board{min-width:900px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
 .schedule-grid{display:grid;grid-template-columns:180px repeat(5,minmax(155px,1fr))}
 .schedule-cell{min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
@@ -208,7 +207,6 @@ td input[type=text]:focus{background:var(--blue2)}
 .schedule-input:focus{border-color:var(--orange);border-style:solid}
 .schedule-input::placeholder{color:#5a5a5e}
 
-/* === КОМПАКТНЫЙ СПИСОК ЗАКАЗОВ === */
 .schedule-pool{
   margin:0 0 14px;
   border:1px solid var(--line);border-radius:14px;
@@ -263,6 +261,56 @@ td input[type=text]:focus{background:var(--blue2)}
 .schedule-hint{font-size:11px;color:var(--muted);line-height:1.45;margin:12px 0}
 .schedule-actions{display:flex;justify-content:flex-end;margin-top:14px}
 
+/* === DASHBOARD === */
+.kpi-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:12px;margin-bottom:16px;
+}
+.kpi-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px;
+  display:flex;flex-direction:column;gap:6px;
+  position:relative;overflow:hidden;
+}
+.kpi-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--orange),transparent);
+}
+.kpi-card.green::before{background:linear-gradient(90deg,var(--green),transparent)}
+.kpi-card.blue::before{background:linear-gradient(90deg,#4a9eff,transparent)}
+.kpi-card.red::before{background:linear-gradient(90deg,var(--red),transparent)}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700}
+.kpi-value{font-size:30px;font-weight:800;color:#fff;line-height:1.1}
+.kpi-value .unit{font-size:14px;color:var(--muted);font-weight:600;margin-left:4px}
+.kpi-hint{font-size:11px;color:var(--muted);margin-top:2px}
+
+.charts-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));
+  gap:14px;
+}
+.chart-card{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:14px;padding:16px 18px 18px;
+  display:flex;flex-direction:column;
+}
+.chart-card h3{
+  margin:0 0 12px;font-size:14px;color:#fff;font-weight:750;
+  display:flex;align-items:center;gap:8px;
+}
+.chart-card h3 .dot{
+  width:8px;height:8px;border-radius:50%;background:var(--orange);
+}
+.chart-wrap{position:relative;height:260px;width:100%}
+.chart-wrap.tall{height:340px}
+.chart-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
+
+.dashboard-note{
+  margin-top:14px;padding:12px 14px;border-radius:12px;
+  background:var(--panel2);border:1px solid var(--line);
+  font-size:11px;color:var(--muted);line-height:1.5;
+}
+.dashboard-note b{color:var(--orange)}
+
 .toast{position:fixed;right:16px;bottom:16px;z-index:300;background:var(--orange);color:#121212;padding:11px 14px;border-radius:11px;box-shadow:0 12px 30px rgba(0,0,0,.5);font-size:12px;font-weight:600;max-width:min(360px,calc(100vw - 32px))}
 
 .section-titlebar{padding:11px 13px;font-weight:700;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted)}
@@ -289,6 +337,9 @@ td input[type=text]:focus{background:var(--blue2)}
   .mobile-list{display:block}
   .schedule-pool-list{grid-template-columns:1fr}
   .schedule-board{min-width:820px}
+  .charts-grid{grid-template-columns:1fr}
+  .chart-wrap,.chart-wrap.tall{height:260px}
+  .kpi-value{font-size:24px}
 }
 @media(min-width:761px){.mobile-list{display:none!important}}
 </style>
@@ -306,6 +357,7 @@ td input[type=text]:focus{background:var(--blue2)}
  <button class="menu-card" onclick="showSection('dodelki')"><div class="menu-icon">🔧</div><div class="menu-title">Доделки</div></button>
  <button class="menu-card" onclick="showSection('ordered')"><div class="menu-icon">📦</div><div class="menu-title">Заказные позиции</div></button>
  <button class="menu-card" onclick="showSection('schedule')"><div class="menu-icon">🗓️</div><div class="menu-title">График</div></button>
+ <button class="menu-card" onclick="showSection('dashboard')"><div class="menu-icon">📊</div><div class="menu-title">Экспериментальный<br>Dashboard</div><div class="menu-note">Статистика, анализ, выводы</div></button>
 </div></div></section>
 
 <main class="container">
@@ -365,9 +417,56 @@ td input[type=text]:focus{background:var(--blue2)}
  <div class="schedule-hint">Заполняйте ячейки вручную — время, номер заказа, комментарий. Всё сохраняется автоматически.</div>
  <div class="schedule-actions"><button class="btn btn-danger" onclick="clearSchedule()">Очистить</button></div>
 </section>
+
+<section id="dashboard" class="section">
+ <div class="section-head">
+   <div>
+     <h2 class="section-title">📊 Экспериментальный Dashboard</h2>
+     <div class="section-sub">Статистика, анализ и выводы · данные обновляются автоматически</div>
+   </div>
+   <div class="section-actions">
+     <button class="btn" onclick="renderDashboard()">↻ Пересчитать</button>
+   </div>
+ </div>
+
+ <div class="kpi-grid" id="kpiGrid"></div>
+
+ <div class="charts-grid">
+   <div class="chart-card">
+     <h3><span class="dot"></span>Заказы по статусам</h3>
+     <div class="chart-wrap"><canvas id="chartOrdersStatus"></canvas></div>
+     <div class="chart-hint">Сколько заказов в каком состоянии прямо сейчас.</div>
+   </div>
+
+   <div class="chart-card">
+     <h3><span class="dot"></span>Загрузка монтажников</h3>
+     <div class="chart-wrap"><canvas id="chartWorkers"></canvas></div>
+     <div class="chart-hint">Сколько активных заказов и доделок назначено на каждого монтажника.</div>
+   </div>
+
+   <div class="chart-card">
+     <h3><span class="dot"></span>Динамика по месяцам</h3>
+     <div class="chart-wrap tall"><canvas id="chartMonths"></canvas></div>
+     <div class="chart-hint">Сколько заказов и доделок закрывалось каждый месяц (по полю <b>updated_at</b>).</div>
+   </div>
+
+   <div class="chart-card">
+     <h3><span class="dot"></span>Прогресс по материалам</h3>
+     <div class="chart-wrap"><canvas id="chartMaterials"></canvas></div>
+     <div class="chart-hint">Процент заказов, у которых отмечены ЛДСП, фурнитура, фасады и готовность к сборке.</div>
+   </div>
+ </div>
+
+ <div class="dashboard-note">
+   <b>Как читать:</b> «В работе» — заказы без галочки «готово». «Готово» — с галочкой. «Средний срок» считается по разнице между
+   <b>created_at</b> и <b>updated_at</b> для готовых заказов. Если в таблице <b>orders</b> нет <b>created_at</b>, срок считаться не будет — тогда
+   добавьте этот столбец или ориентируйтесь только на количество.
+ </div>
+</section>
 </main>
 <div id="toast" class="toast hidden"></div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
 const URL='https://xeueknrdngciphkwddfu.supabase.co';
 const KEY='sb_publishable_r-nKoe46FVG9AKyMDCQFJg_hTL6uws4';
@@ -408,7 +507,7 @@ async function completeDodelka(i,v){dodelkiRows[i].completed=v;renderDodelki();r
 async function addDodelka(){try{const x=await api('dodelki',{method:'POST',body:JSON.stringify({sort_order:dodelkiRows.length})});dodelkiRows.push(x[0]);renderDodelki();renderBrickSources()}catch(e){toast('Не удалось добавить строку')}}
 async function delDodelka(i){if(!confirm('Удалить эту доделку?'))return;try{await api('dodelki?id=eq.'+dodelkiRows[i].id,{method:'DELETE'});dodelkiRows.splice(i,1);renderDodelki();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
 
-/* === ЗАКАЗНЫЕ ПОЗИЦИИ: две таблицы === */
+/* === ЗАКАЗНЫЕ ПОЗИЦИИ === */
 function orderedDone(r){return!!(r.ordered&&r.in_workshop)}
 function renderOrdered(){
   const q=(document.getElementById('orderedSearch')?.value||'').trim().toLowerCase();
@@ -534,8 +633,8 @@ function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furnitur
 async function loadAll(silent=false){
  if(refreshBusy)return;refreshBusy=true;try{
   const [ps,os,dr,op]=await Promise.all([api('periods?select=*&order=sort_order.asc'),api('orders?select=*&order=sort_order.asc'),api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),api('ordered_positions?select=*&order=sort_order.asc')]);
-  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready}))}));
-  dodelkiRows=dr;orderedRows=op;renderOrders();renderDodelki();renderOrdered();renderScheduleAll();setStatus('● Онлайн',true)
+  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at}))}));
+  dodelkiRows=dr;orderedRows=op;renderOrders();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();setStatus('● Онлайн',true)
  }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
 }
 function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
@@ -602,9 +701,315 @@ async function delPeriod(pi){if(!confirm('Удалить период?'))return;
 
 function clearSearch(id,fn){document.getElementById(id).value='';fn();document.getElementById(id).focus()}
 
-const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График'};
+/* ============================= */
+/* === ЭКСПЕРИМЕНТАЛЬНЫЙ DASHBOARD === */
+/* ============================= */
+let dashCharts={};
+const DASH_COLORS={
+  orange:'#ff8c1a',
+  orangeSoft:'rgba(255,140,26,.25)',
+  green:'#2ea043',
+  blue:'#4a9eff',
+  red:'#ff5c5c',
+  purple:'#a78bfa',
+  gray:'#5a5a5e',
+  graySoft:'rgba(142,142,147,.25)'
+};
+const CHART_DEFAULTS={
+  color:'#e8e8ea',
+  borderColor:'#2e2e30',
+  font:{family:'-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif',size:11}
+};
+if(window.Chart){
+  Chart.defaults.color=CHART_DEFAULTS.color;
+  Chart.defaults.borderColor=CHART_DEFAULTS.borderColor;
+  Chart.defaults.font.family=CHART_DEFAULTS.font.family;
+  Chart.defaults.font.size=CHART_DEFAULTS.font.size;
+}
+
+function fmtNum(n){return (n||0).toLocaleString('ru-RU')}
+function fmtDays(n){return n==null?'—':n.toFixed(1)+' дн.'}
+
+function collectDashboardStats(){
+  const stats={
+    ordersActive:0, ordersReady:0,
+    dodelkiActive:0, dodelkiDone:0,
+    orderedActive:0, orderedDone:0,
+    avgOrderDays:null,
+    workers:{},        // { имя: {orders, dodelki} }
+    months:{},         // { 'YYYY-MM': {orders, dodelki} }
+    materials:{ldsp:0,furniture:0,facades:0,assembly_ready:0},
+    ordersTotal:0
+  };
+
+  // Заказы
+  let sumDays=0, countDays=0;
+  for(const p of ordersData){
+    for(const r of p.rows){
+      stats.ordersTotal++;
+      if(r.ready) stats.ordersReady++; else stats.ordersActive++;
+      if(r.ldsp) stats.materials.ldsp++;
+      if(r.furniture) stats.materials.furniture++;
+      if(r.facades) stats.materials.facades++;
+      if(r.assembly_ready) stats.materials.assembly_ready++;
+
+      // Монтажник из заказов
+      const worker=(r.installer||'').trim();
+      if(worker){
+        if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};
+        stats.workers[worker].orders++;
+      }
+
+      // Срок: только для готовых
+      if(r.ready&&r.created_at&&r.updated_at){
+        const a=new Date(r.created_at).getTime();
+        const b=new Date(r.updated_at).getTime();
+        if(!isNaN(a)&&!isNaN(b)&&b>a){
+          sumDays+=(b-a)/86400000;
+          countDays++;
+        }
+      }
+
+      // Месяц закрытия
+      if(r.ready&&r.updated_at){
+        const d=new Date(r.updated_at);
+        if(!isNaN(d.getTime())){
+          const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+          if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
+          stats.months[key].orders++;
+        }
+      }
+    }
+  }
+  if(countDays) stats.avgOrderDays=sumDays/countDays;
+
+  // Доделки
+  for(const r of dodelkiRows){
+    if(r.completed) stats.dodelkiDone++; else stats.dodelkiActive++;
+    const worker=(r.installer||'').trim();
+    if(worker){
+      if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};
+      stats.workers[worker].dodelki++;
+    }
+    if(r.completed&&r.updated_at){
+      const d=new Date(r.updated_at);
+      if(!isNaN(d.getTime())){
+        const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+        if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
+        stats.months[key].dodelki++;
+      }
+    }
+  }
+
+  // Заказные позиции
+  for(const r of orderedRows){
+    if(orderedDone(r)) stats.orderedDone++; else stats.orderedActive++;
+  }
+
+  return stats;
+}
+
+function renderKpis(stats){
+  const grid=document.getElementById('kpiGrid');
+  const cards=[
+    {label:'Заказы в работе', value:stats.ordersActive, hint:`из ${stats.ordersTotal} всего`, cls:''},
+    {label:'Заказы готово', value:stats.ordersReady, hint:`${stats.ordersTotal?Math.round(stats.ordersReady/stats.ordersTotal*100):0}% от всех`, cls:'green'},
+    {label:'Доделки в работе', value:stats.dodelkiActive, hint:`${stats.dodelkiDone} выполнено`, cls:'blue'},
+    {label:'Заказные позиции', value:stats.orderedActive, hint:`${stats.orderedDone} готово`, cls:''},
+    {label:'Средний срок заказа', value:stats.avgOrderDays==null?'—':stats.avgOrderDays.toFixed(1), unit:stats.avgOrderDays==null?'':'дн.', hint:'по готовым заказам', cls:'red'}
+  ];
+  grid.innerHTML=cards.map(c=>`
+    <div class="kpi-card ${c.cls}">
+      <div class="kpi-label">${esc(c.label)}</div>
+      <div class="kpi-value">${esc(String(c.value))}${c.unit?`<span class="unit">${esc(c.unit)}</span>`:''}</div>
+      <div class="kpi-hint">${esc(c.hint)}</div>
+    </div>`).join('');
+}
+
+function destroyChart(key){
+  if(dashCharts[key]){try{dashCharts[key].destroy()}catch(e){} delete dashCharts[key]}
+}
+
+function renderOrdersStatusChart(stats){
+  destroyChart('status');
+  const ctx=document.getElementById('chartOrdersStatus');if(!ctx||!window.Chart)return;
+  dashCharts.status=new Chart(ctx,{
+    type:'doughnut',
+    data:{
+      labels:['В работе','Готово'],
+      datasets:[{
+        data:[stats.ordersActive,stats.ordersReady],
+        backgroundColor:[DASH_COLORS.orange,DASH_COLORS.green],
+        borderColor:'#1c1c1e',
+        borderWidth:3,
+        hoverOffset:6
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      cutout:'62%',
+      plugins:{
+        legend:{position:'bottom',labels:{padding:14,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
+      }
+    }
+  });
+}
+
+function renderWorkersChart(stats){
+  destroyChart('workers');
+  const ctx=document.getElementById('chartWorkers');if(!ctx||!window.Chart)return;
+  const names=Object.keys(stats.workers);
+  if(!names.length){
+    dashCharts.workers=new Chart(ctx,{type:'bar',data:{labels:['Нет данных'],datasets:[{data:[0],backgroundColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+    return;
+  }
+  // Сортируем по суммарной загрузке
+  names.sort((a,b)=>{
+    const sa=stats.workers[a].orders+stats.workers[a].dodelki;
+    const sb=stats.workers[b].orders+stats.workers[b].dodelki;
+    return sb-sa;
+  });
+  dashCharts.workers=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:names,
+      datasets:[
+        {label:'Заказы',data:names.map(n=>stats.workers[n].orders),backgroundColor:DASH_COLORS.orange,borderRadius:6,stack:'w'},
+        {label:'Доделки',data:names.map(n=>stats.workers[n].dodelki),backgroundColor:DASH_COLORS.blue,borderRadius:6,stack:'w'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      indexAxis:'y',
+      scales:{
+        x:{stacked:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{precision:0}},
+        y:{stacked:true,grid:{display:false}}
+      },
+      plugins:{
+        legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
+      }
+    }
+  });
+}
+
+function renderMonthsChart(stats){
+  destroyChart('months');
+  const ctx=document.getElementById('chartMonths');if(!ctx||!window.Chart)return;
+  const keys=Object.keys(stats.months).sort();
+  if(!keys.length){
+    dashCharts.months=new Chart(ctx,{type:'line',data:{labels:['Нет данных'],datasets:[{data:[0],borderColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});
+    return;
+  }
+  const labels=keys.map(k=>{
+    const [y,m]=k.split('-');
+    const months=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    return months[parseInt(m,10)-1]+' '+y.slice(2);
+  });
+  dashCharts.months=new Chart(ctx,{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        {
+          label:'Заказы закрыто',
+          data:keys.map(k=>stats.months[k].orders),
+          borderColor:DASH_COLORS.orange,
+          backgroundColor:DASH_COLORS.orangeSoft,
+          tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.orange
+        },
+        {
+          label:'Доделки закрыто',
+          data:keys.map(k=>stats.months[k].dodelki),
+          borderColor:DASH_COLORS.blue,
+          backgroundColor:'rgba(74,158,255,.20)',
+          tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.blue
+        }
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,.05)'}},
+        y:{beginAtZero:true,grid:{color:'rgba(255,255,255,.05)'},ticks:{precision:0}}
+      },
+      plugins:{
+        legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},
+        tooltip:{backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10}
+      }
+    }
+  });
+}
+
+function renderMaterialsChart(stats){
+  destroyChart('materials');
+  const ctx=document.getElementById('chartMaterials');if(!ctx||!window.Chart)return;
+  const total=stats.ordersTotal||1;
+  const labels=['ЛДСП','Фурнитура','Фасады','Готовы к сборке'];
+  const data=[
+    stats.materials.ldsp,
+    stats.materials.furniture,
+    stats.materials.facades,
+    stats.materials.assembly_ready
+  ];
+  const percents=data.map(v=>Math.round(v/total*100));
+  dashCharts.materials=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels,
+      datasets:[{
+        label:'% заказов',
+        data:percents,
+        backgroundColor:[DASH_COLORS.orange,DASH_COLORS.blue,DASH_COLORS.purple,DASH_COLORS.green],
+        borderRadius:6,
+        maxBarThickness:42
+      }]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      scales:{
+        y:{beginAtZero:true,max:100,grid:{color:'rgba(255,255,255,.05)'},ticks:{callback:v=>v+'%'}},
+        x:{grid:{display:false}}
+      },
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:'#242426',borderColor:'#2e2e30',borderWidth:1,padding:10,
+          callbacks:{
+            label:(item)=>`${item.parsed.y}% (${data[item.dataIndex]} из ${stats.ordersTotal})`
+          }
+        }
+      }
+    }
+  });
+}
+
+function renderDashboard(){
+  if(!window.Chart)return;
+  const stats=collectDashboardStats();
+  renderKpis(stats);
+  renderOrdersStatusChart(stats);
+  renderWorkersChart(stats);
+  renderMonthsChart(stats);
+  renderMaterialsChart(stats);
+}
+
+/* === НАВИГАЦИЯ === */
+const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Экспериментальный Dashboard'};
 function showHome(push=true){document.getElementById('siteHeader').style.display='none';document.getElementById('cover').style.display='flex';document.querySelectorAll('.section').forEach(s=>s.style.display='none');window.scrollTo({top:0,behavior:'smooth'});if(push&&location.hash)history.pushState({},'',location.pathname+location.search)}
-function showSection(id,push=true){const s=document.getElementById(id);if(!s)return;document.getElementById('siteHeader').style.display='block';document.getElementById('cover').style.display='none';document.querySelectorAll('.section').forEach(x=>x.style.display='none');s.style.display='block';document.getElementById('pageTitle').textContent=sectionTitles[id]||'';window.scrollTo({top:0,behavior:'smooth'});if(push)history.pushState({},'', '#'+id)}
+function showSection(id,push=true){
+  const s=document.getElementById(id);if(!s)return;
+  document.getElementById('siteHeader').style.display='block';
+  document.getElementById('cover').style.display='none';
+  document.querySelectorAll('.section').forEach(x=>x.style.display='none');
+  s.style.display='block';
+  document.getElementById('pageTitle').textContent=sectionTitles[id]||'';
+  window.scrollTo({top:0,behavior:'smooth'});
+  if(id==='dashboard') setTimeout(renderDashboard,50);
+  if(push)history.pushState({},'', '#'+id);
+}
 function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles[id])showSection(id,false);else showHome(false)}
 window.addEventListener('popstate',routeFromHash);window.addEventListener('hashchange',routeFromHash);
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
