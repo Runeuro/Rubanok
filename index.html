@@ -42,7 +42,6 @@
   --toggle-icon:#e8e8ea;
 }
 
-/* === СВЕТЛАЯ ТЕМА (Apple style) === */
 html[data-theme="light"]{
   --bg:#f5f5f7;
   --panel:#ffffff;
@@ -82,7 +81,6 @@ html[data-theme="light"]{
 body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;min-height:100vh;transition:background .35s, color .35s}
 button,input,textarea{font:inherit}button{border:0;cursor:pointer}.hidden{display:none!important}
 
-/* === ТОГЛ ТЕМЫ === */
 .theme-toggle{
   position:fixed;
   top:12px;left:12px;
@@ -138,11 +136,7 @@ html[data-theme="light"] .theme-toggle .knob{left:35px}
 .btn-sm{padding:6px 10px;font-size:12px;border-radius:9px}
 
 .cover{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px 16px;position:relative}
-.cover::before{
-  content:'';position:fixed;inset:0;z-index:-1;
-  background:var(--cover-bg);
-  transition:background .35s;
-}
+.cover::before{content:'';position:fixed;inset:0;z-index:-1;background:var(--cover-bg);transition:background .35s}
 .cover-card{
   width:min(1180px,100%);
   padding:34px;border-radius:28px;position:relative;
@@ -169,7 +163,6 @@ html[data-theme="light"] .cover-card::before{
 html[data-theme="light"] .cover-card::after{
   background:radial-gradient(ellipse at center, rgba(255,255,255,.55), transparent 60%);
 }
-
 .menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;position:relative;z-index:1}
 .menu-card{
   display:block;width:100%;text-align:left;padding:22px;border-radius:20px;
@@ -202,7 +195,6 @@ html[data-theme="light"] .menu-card:hover{
 .menu-title{font-size:20px;font-weight:750;color:var(--text-strong);position:relative;z-index:1}
 .menu-note{font-size:12px;color:var(--muted);margin-top:7px;position:relative;z-index:1}
 
-/* === ВТОРИЧНЫЕ КНОПКИ (Эксп. Dash, Расходы) === */
 .menu-secondary{
   display:grid;
   grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
@@ -264,8 +256,18 @@ td input[type=text]:focus{background:var(--blue2)}
 }
 .period-chip:hover{border-color:var(--orange);background:var(--panel2);color:var(--orange)}
 .period-chip:active{transform:scale(.97)}
+.period-chip.archived{
+  background:var(--panel2);color:var(--muted);border-style:dashed;
+}
+.period-chip.archived:hover{color:var(--orange);border-color:var(--orange);border-style:solid}
+.archived-chip-label{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:10px;font-weight:800;letter-spacing:.06em;color:var(--muted);
+  text-transform:uppercase;margin-right:6px;
+}
 
 .period{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+.period.period-archived{border-style:dashed;opacity:.92}
 .period-head{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
 .period-toggle{flex:1;text-align:left;background:transparent;padding:5px;border-radius:9px;display:flex;align-items:center;gap:9px;color:var(--text)}
 .chevron{width:26px;height:26px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;transition:transform .18s;color:var(--orange)}
@@ -274,6 +276,36 @@ td input[type=text]:focus{background:var(--blue2)}
 .period-title-input:focus{border-color:var(--orange);background:var(--panel2);outline:0}
 .period-meta{font-size:11px;color:var(--muted);white-space:nowrap}
 .period-tools{display:flex;gap:6px;align-items:center}
+.archive-check{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:6px 10px;border-radius:9px;border:1px solid var(--line);
+  background:var(--panel2);color:var(--muted);
+  font-size:12px;font-weight:650;cursor:pointer;user-select:none;
+  transition:.15s;
+}
+.archive-check:hover{color:var(--orange);border-color:var(--orange)}
+.archive-check input{appearance:none;width:14px;height:14px;border:2px solid var(--line);border-radius:4px;background:var(--panel);cursor:pointer;position:relative;transition:.15s}
+.archive-check input:checked{background:var(--orange);border-color:var(--orange)}
+.archive-check input:checked::after{content:"✓";position:absolute;color:#121212;font-weight:900;font-size:10px;left:1px;top:-3px}
+.archive-check.checked{color:var(--orange);border-color:var(--orange)}
+
+.archive-panel{
+  margin:0 0 10px;
+  border:1px dashed var(--line);border-radius:var(--radius);
+  background:color-mix(in srgb, var(--panel) 96%, var(--muted) 4%);
+  padding:12px;
+}
+.archive-panel-head{
+  display:flex;align-items:center;justify-content:space-between;
+  font-size:12px;font-weight:750;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.05em;
+  margin-bottom:10px;
+}
+.archive-panel-head button{
+  background:transparent;color:var(--muted);font-size:16px;padding:0 6px;
+}
+.archive-panel-head button:hover{color:var(--orange)}
+.archive-empty{font-size:12px;color:var(--muted);padding:6px 0}
 
 .col-num{width:120px}.col-product{width:95px}.col-worker{width:105px}.col-note{width:25%}
 .material,.ready-btn{cursor:pointer}
@@ -321,18 +353,19 @@ td input[type=text]:focus{background:var(--blue2)}
 .done-body{display:none;margin-top:8px}
 .done-block.open .done-body{display:block}
 
+/* === ГРАФИК: строки в 2 раза ниже === */
 .schedule-board{min-width:900px;border:1px solid var(--line);border-radius:14px;overflow:hidden;background:var(--panel)}
 .schedule-grid{display:grid;grid-template-columns:180px repeat(5,minmax(155px,1fr))}
-.schedule-cell{min-height:130px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;position:relative}
+.schedule-cell{min-height:65px;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:5px;position:relative}
 .schedule-cell:last-child{border-right:0}
-.schedule-head{min-height:44px;background:var(--panel2);font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--orange)}
-.schedule-name{background:color-mix(in srgb, var(--panel) 90%, var(--bg) 10%);font-weight:700;display:flex;align-items:center;padding:12px 14px;font-size:13px;color:var(--text-strong);min-height:130px}
+.schedule-head{min-height:28px;background:var(--panel2);font-weight:750;font-size:12px;display:flex;align-items:center;justify-content:center;color:var(--orange)}
+.schedule-name{background:color-mix(in srgb, var(--panel) 90%, var(--bg) 10%);font-weight:700;display:flex;align-items:center;padding:6px 10px;font-size:12px;color:var(--text-strong);min-height:65px}
 .schedule-input{
-  width:100%;height:100%;min-height:114px;
-  border:1px dashed var(--line);border-radius:9px;
+  width:100%;height:100%;min-height:55px;
+  border:1px dashed var(--line);border-radius:8px;
   background:var(--panel2);color:var(--text);
-  padding:8px 9px;outline:0;resize:vertical;
-  font-size:12px;line-height:1.4;
+  padding:5px 7px;outline:0;resize:vertical;
+  font-size:11px;line-height:1.3;
 }
 .schedule-input:focus{border-color:var(--orange);border-style:solid}
 .schedule-input::placeholder{color:var(--muted)}
@@ -351,7 +384,19 @@ td input[type=text]:focus{background:var(--blue2)}
 .schedule-pool-item{
   display:flex;align-items:flex-start;gap:7px;padding:6px 8px;border-radius:8px;
   background:var(--panel2);border:1px solid var(--line);font-size:11px;line-height:1.3;min-width:0;
+  transition:opacity .2s,filter .2s;
 }
+.schedule-pool-item.used{
+  background:color-mix(in srgb, var(--panel2) 60%, var(--muted) 40%);
+  color:#6a6a6e;
+  border-color:color-mix(in srgb, var(--line) 60%, var(--muted) 40%);
+  filter:grayscale(1);
+  opacity:.65;
+}
+.schedule-pool-item.used .num,
+.schedule-pool-item.used .worker,
+.schedule-pool-item.used .meta{color:#6a6a6e!important}
+.schedule-pool-item.used .tag{background:#4a4a4d!important;color:#b5b5b8!important}
 .schedule-pool-item .tag{
   flex-shrink:0;width:18px;height:18px;border-radius:5px;
   display:grid;place-items:center;font-weight:800;font-size:9px;
@@ -389,8 +434,8 @@ td input[type=text]:focus{background:var(--blue2)}
 .chart-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px 18px 18px;display:flex;flex-direction:column}
 .chart-card h3{margin:0 0 12px;font-size:14px;color:var(--text-strong);font-weight:750;display:flex;align-items:center;gap:8px}
 .chart-card h3 .dot{width:8px;height:8px;border-radius:50%;background:var(--orange)}
-.chart-wrap{position:relative;height:260px;width:100%}
-.chart-wrap.tall{height:340px}
+.chart-wrap{position:relative;height:260px;width:100%;transition:opacity .5s ease,transform .5s ease}
+.chart-wrap.fading{opacity:0;transform:scale(.96)}
 .chart-hint{font-size:11px;color:var(--muted);margin-top:10px;line-height:1.4}
 
 .dashboard-note{margin-top:14px;padding:12px 14px;border-radius:12px;background:var(--panel2);border:1px solid var(--line);font-size:11px;color:var(--muted);line-height:1.5}
@@ -433,7 +478,7 @@ td input[type=text]:focus{background:var(--blue2)}
 .expense-history-head{
   width:100%;display:flex;align-items:center;gap:10px;
   padding:11px 14px;background:transparent;color:var(--text);font-weight:650;font-size:13px;
-  transition:.15s;
+  transition:.15s;cursor:pointer;
 }
 .expense-history-head:hover{color:var(--orange)}
 .expense-history-head .chevron{background:var(--panel2)}
@@ -470,7 +515,6 @@ td input[type=text]:focus{background:var(--blue2)}
   .menu-grid{grid-template-columns:1fr;gap:12px}
   .menu-card{min-height:0;padding:24px 18px}
   .menu-icon{margin-bottom:12px}
-  /* вторичные кнопки: 1/2 от размера основных */
   .menu-secondary{grid-template-columns:1fr 1fr;gap:10px;max-width:none;margin-top:10px}
   .menu-card-sm{padding:14px 10px;font-size:12px;min-height:60px;flex-direction:column;gap:4px}
   .menu-card-sm .sm-icon{font-size:18px}
@@ -485,13 +529,14 @@ td input[type=text]:focus{background:var(--blue2)}
   .schedule-pool-list{grid-template-columns:1fr}
   .schedule-board{min-width:820px}
   .charts-grid{grid-template-columns:1fr}
-  .chart-wrap,.chart-wrap.tall{height:260px}
+  .chart-wrap{height:260px}
   .kpi-value{font-size:24px}
   .expense-top{grid-template-columns:1fr}
   .expense-total .val,.expense-balance input{font-size:24px}
   .theme-toggle{top:9px;left:9px;width:58px;height:30px}
   html[data-theme="light"] .theme-toggle .knob{left:29px}
   .theme-toggle .knob{width:22px;height:22px}
+  .period-tools{flex-wrap:wrap;justify-content:flex-end}
 }
 @media(min-width:761px){.mobile-list{display:none!important}}
 </style>
@@ -525,8 +570,10 @@ td input[type=text]:focus{background:var(--blue2)}
 
 <main class="container">
 <section id="orders" class="section">
- <div class="section-head"><div><h2 class="section-title">📋 Заказы</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div><div class="section-actions"><button class="btn btn-primary" onclick="addPeriod()">＋ Период</button></div></div>
- <div class="search"><input id="orderSearch" placeholder="Поиск по адресу, номеру заказа или изделию…" oninput="renderOrders()"><button class="btn" onclick="clearSearch('orderSearch',renderOrders)">Сбросить</button></div><div id="ordersApp"></div>
+ <div class="section-head"><div><h2 class="section-title">📋 Заказы</h2><div class="section-sub">Общая онлайн-таблица · изменения сохраняются для всех</div></div><div class="section-actions"><button class="btn btn-primary" onclick="addPeriod()">＋ Период</button><button class="btn" onclick="toggleArchivePanel()">🗄 Архив</button></div></div>
+ <div class="search"><input id="orderSearch" placeholder="Поиск по адресу, номеру заказа или изделию…" oninput="renderOrders()"><button class="btn" onclick="clearSearch('orderSearch',renderOrders)">Сбросить</button></div>
+ <div id="archivePanel"></div>
+ <div id="ordersApp"></div>
 </section>
 
 <section id="dodelki" class="section">
@@ -577,7 +624,7 @@ td input[type=text]:focus{background:var(--blue2)}
  </div>
 
  <div class="card"><div class="section-titlebar">Расписание монтажников</div><div class="schedule-wrap" style="overflow-x:auto"><div id="scheduleBoard" class="schedule-board"></div></div></div>
- <div class="schedule-hint">Заполняйте ячейки вручную — время, номер заказа, комментарий. Всё сохраняется автоматически.</div>
+ <div class="schedule-hint">Заполняйте ячейки вручную — время, номер заказа, комментарий. Всё сохраняется автоматически. Заказы, номер которых встречается в графике, выделяются серым.</div>
  <div class="schedule-actions"><button class="btn btn-danger" onclick="clearSchedule()">Очистить</button></div>
 </section>
 
@@ -597,25 +644,19 @@ td input[type=text]:focus{background:var(--blue2)}
  <div class="charts-grid">
    <div class="chart-card">
      <h3><span class="dot"></span>Заказы по статусам</h3>
-     <div class="chart-wrap"><canvas id="chartOrdersStatus"></canvas></div>
+     <div class="chart-wrap" id="wrapOrdersStatus"><canvas id="chartOrdersStatus"></canvas></div>
      <div class="chart-hint">Сколько заказов в каком состоянии прямо сейчас.</div>
    </div>
 
    <div class="chart-card">
      <h3><span class="dot"></span>Загрузка монтажников</h3>
-     <div class="chart-wrap"><canvas id="chartWorkers"></canvas></div>
+     <div class="chart-wrap" id="wrapWorkers"><canvas id="chartWorkers"></canvas></div>
      <div class="chart-hint">Сколько активных заказов и доделок назначено на каждого монтажника.</div>
    </div>
 
    <div class="chart-card">
-     <h3><span class="dot"></span>Динамика по месяцам</h3>
-     <div class="chart-wrap tall"><canvas id="chartMonths"></canvas></div>
-     <div class="chart-hint">Сколько заказов и доделок закрывалось каждый месяц (по полю <b>updated_at</b>).</div>
-   </div>
-
-   <div class="chart-card">
      <h3><span class="dot"></span>Прогресс по материалам</h3>
-     <div class="chart-wrap"><canvas id="chartMaterials"></canvas></div>
+     <div class="chart-wrap" id="wrapMaterials"><canvas id="chartMaterials"></canvas></div>
      <div class="chart-hint">Процент заказов, у которых отмечены ЛДСП, фурнитура, фасады и готовность к сборке.</div>
    </div>
  </div>
@@ -680,10 +721,11 @@ const URL='https://xeueknrdngciphkwddfu.supabase.co';
 const KEY='sb_publishable_r-nKoe46FVG9AKyMDCQFJg_hTL6uws4';
 const H={'apikey':KEY,'Authorization':'Bearer '+KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 let ordersData=[],dodelkiRows=[],orderedRows=[],expenseHistory=[],refreshBusy=false,toastTimer=null;
+let archivePanelOpen=false;
 const SCHEDULE_DAYS=['ПН','ВТ','СР','ЧТ','ПТ'];
 const SCHEDULE_WORKERS=['Игорь','Константин К','Сергей Ю','Владимир','Павел','Константин Х','Сергей Ш'];
 let scheduleState={names:[...SCHEDULE_WORKERS],cells:{}};
-let expenseRows=[]; // {date, description, amount}
+let expenseRows=[];
 let expenseDraftTimer=null;
 let expenseDraftLoaded=false;
 let openExpenseHistoryIds=new Set();
@@ -769,7 +811,11 @@ function toggleDone(id){document.getElementById(id).classList.toggle('open')}
 /* === ГРАФИК === */
 function scheduleCellKey(row,day){return row+'_'+day}
 function getCell(row,day){return scheduleState.cells[scheduleCellKey(row,day)]||''}
-function setCell(row,day,value){scheduleState.cells[scheduleCellKey(row,day)]=value;queueScheduleSave()}
+function setCell(row,day,value){
+  scheduleState.cells[scheduleCellKey(row,day)]=value;
+  queueScheduleSave();
+  renderBrickSources();
+}
 function normaliseScheduleState(raw){
   const s=raw||{};
   const cells={};
@@ -814,7 +860,7 @@ function renderSchedule(){
  for(let r=0;r<SCHEDULE_WORKERS.length;r++){
    out+=`<div class="schedule-cell schedule-name">${esc(SCHEDULE_WORKERS[r])}</div>`;
    for(let d=0;d<5;d++){
-     out+=`<div class="schedule-cell"><textarea class="schedule-input" placeholder="Что делает…" onchange="setCell(${r},${d},this.value)">${esc(getCell(r,d))}</textarea></div>`;
+     out+=`<div class="schedule-cell"><textarea class="schedule-input" placeholder="Что делает…" oninput="setCell(${r},${d},this.value)">${esc(getCell(r,d))}</textarea></div>`;
    }
  }
  out+='</div>';board.innerHTML=out;
@@ -829,12 +875,29 @@ function scheduleBricks(){
  }
  return{mounting,fixes}
 }
+/* Все номера заказов, которые уже встречаются в тексте графика */
+function scheduleUsedNumbers(){
+  const used=new Set();
+  const haystack=Object.values(scheduleState.cells||{}).map(v=>String(v||'')).join('\n');
+  if(!haystack)return used;
+  const all=[];
+  for(const p of ordersData)for(const r of p.rows)if(r.number)all.push(String(r.number).trim());
+  for(const r of dodelkiRows)if(r.order_number)all.push(String(r.order_number).trim());
+  // уникальные
+  const uniq=[...new Set(all.filter(Boolean))].sort((a,b)=>b.length-a.length); // длинные первыми, чтобы избежать ложных срабатываний
+  for(const num of uniq){
+    // проверяем как отдельное слово (не внутри других цифр)
+    const rx=new RegExp('(^|[^0-9A-Za-zА-Яа-я])'+num.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'([^0-9A-Za-zА-Яа-я]|$)');
+    if(rx.test(haystack))used.add(num);
+  }
+  return used;
+}
 function poolItemHTML(x){
   const tag=x.type==='M'?'М':'Д';
   const tagCls=x.type==='M'?'':'d';
   const worker=x.worker?`<span class="worker">${esc(x.worker)}</span>`:'';
   const meta=[x.product,x.address].filter(Boolean).join(' / ');
-  return `<div class="schedule-pool-item">
+  return `<div class="schedule-pool-item" data-number="${esc(String(x.number).trim())}">
     <span class="tag ${tagCls}">${tag}</span>
     <div class="main">
       <div class="line1"><span class="num">${esc(x.number)}</span>${worker}</div>
@@ -844,10 +907,24 @@ function poolItemHTML(x){
 }
 function renderBrickSources(){
   const s=scheduleBricks();
+  const used=scheduleUsedNumbers();
   const m=document.getElementById('scheduleMounting'),d=document.getElementById('scheduleDodelki');
   if(!m||!d)return;
-  m.innerHTML=s.mounting.length?s.mounting.map(poolItemHTML).join(''):'<div class="schedule-pool-empty">Нет доступных заказов</div>';
-  d.innerHTML=s.fixes.length?s.fixes.map(poolItemHTML).join(''):'<div class="schedule-pool-empty">Нет доступных доделок</div>';
+
+  const markup=(items,emptyMsg)=>{
+    if(!items.length)return `<div class="schedule-pool-empty">${emptyMsg}</div>`;
+    const html=items.map(poolItemHTML).join('');
+    return html;
+  };
+  m.innerHTML=markup(s.mounting,'Нет доступных заказов');
+  d.innerHTML=markup(s.fixes,'Нет доступных доделок');
+
+  // Помечаем серым те, чьи номера уже встречаются в графике
+  document.querySelectorAll('#scheduleMounting .schedule-pool-item, #scheduleDodelki .schedule-pool-item').forEach(el=>{
+    const num=el.getAttribute('data-number')||'';
+    if(num && used.has(num)) el.classList.add('used');
+  });
+
   document.getElementById('scheduleMountingCount').textContent=s.mounting.length;
   document.getElementById('scheduleDodelkiCount').textContent=s.fixes.length;
 }
@@ -870,7 +947,7 @@ async function loadAll(silent=false){
     api('expenses?select=*&order=created_at.desc').catch(()=>[]),
     api('expense_drafts?id=eq.1&select=*').catch(()=>[])
   ]);
-  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at}))}));
+  ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at})),archived:!!p.archived}));
   dodelkiRows=dr;orderedRows=op;expenseHistory=Array.isArray(ex)?ex:[];
   if(!expenseDraftLoaded || !isEditing()){
     const draft=Array.isArray(ed)&&ed[0]?ed[0]:null;
@@ -880,17 +957,25 @@ async function loadAll(silent=false){
     if(be)be.value=bal?String(bal):'';
     expenseDraftLoaded=true;
   }
-  renderOrders();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();setStatus('● Онлайн',true)
+  renderOrders();renderArchivePanel();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();setStatus('● Онлайн',true)
  }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
 }
 function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
 function orderMatches(r,q){return !q||[r.number,r.product,r.address].some(v=>String(v||'').toLowerCase().includes(q.toLowerCase()))}
+
+/* Архивный период открывается своим ключом */
+function archivePeriodOpen(id){return localStorage.getItem('archive_period_'+id)==='open'}
+function setArchivePeriodOpen(id,open){localStorage.setItem('archive_period_'+id,open?'open':'closed')}
+
 function renderOrders(){
   const root=document.getElementById('ordersApp');
   const q=(document.getElementById('orderSearch')?.value||'').trim();
-  if(!ordersData.length){root.innerHTML='<div class="card"><div class="empty">Нет периодов</div></div>';return}
+  // Показываем только НЕархивные периоды
+  const activePeriods=ordersData.filter(p=>!p.archived);
+  if(!activePeriods.length){root.innerHTML='<div class="card"><div class="empty">Нет периодов</div></div>';return}
   const collapsed=[],expanded=[];
-  ordersData.forEach((p,pi)=>{
+  activePeriods.forEach((p)=>{
+    const pi=ordersData.indexOf(p);
     const rows=p.rows.filter(r=>orderMatches(r,q));
     const open=periodOpen(p.id) || (q && rows.length);
     if(open) expanded.push({p,pi,rows});
@@ -905,7 +990,13 @@ function renderOrders(){
     html+='</div>';
   }
   expanded.forEach(({p,pi,rows})=>{
-    html+=`<section class="period open">
+    html+=renderPeriodBlock(p,pi,rows,false);
+  });
+  html+='</div>';
+  root.innerHTML=html;
+}
+function renderPeriodBlock(p,pi,rows,isArchived){
+  return `<section class="period open ${isArchived?'period-archived':''}">
       <div class="period-head">
         <button class="period-toggle" onclick="togglePeriod(${pi})">
           <span class="chevron">›</span>
@@ -915,6 +1006,10 @@ function renderOrders(){
         <div class="period-tools">
           <button class="btn btn-sm" onclick="addOrderRow(${pi})">＋ Строка</button>
           <button class="btn btn-sm btn-danger" onclick="delPeriod(${pi})">− Период</button>
+          <label class="archive-check ${p.archived?'checked':''}" title="Отметить как архив">
+            <input type="checkbox" ${p.archived?'checked':''} onchange="toggleArchivePeriod(${pi},this.checked)">
+            Архив
+          </label>
         </div>
       </div>
       <div class="period-body">
@@ -928,9 +1023,6 @@ function renderOrders(){
         <div class="mobile-list">${rows.length?rows.map(r=>orderMobileRow(pi,p.rows.indexOf(r),r)).join(''):'<div class="empty">Ничего не найдено</div>'}</div>
       </div>
     </section>`;
-  });
-  html+='</div>';
-  root.innerHTML=html;
 }
 function orderTableRow(pi,ri,r){return `<tr><td><input type="text" value="${esc(r.number)}" onchange="editOrder(${pi},${ri},'number',this.value)" style="width:calc(100% - 34px);display:inline-block"><button class="ready-btn ${r.ready?'on':''}" onclick="toggleOrder(${pi},${ri},'ready',${!r.ready})">${r.ready?'✓':''}</button></td><td><input type="text" value="${esc(r.product)}" onchange="editOrder(${pi},${ri},'product',this.value)"></td><td><input type="text" value="${esc(r.address)}" onchange="editOrder(${pi},${ri},'address',this.value)"></td>${materialCell(pi,ri,'ldsp',r.ldsp,'ЛДСП')}${materialCell(pi,ri,'furniture',r.furniture,'Фур-ра')}${materialCell(pi,ri,'facades',r.facades,'Фасады')}${materialCell(pi,ri,'assembly_ready',r.assembly_ready,'Готовность к сборке')}<td><input type="text" value="${esc(r.assembler)}" onchange="editOrder(${pi},${ri},'assembler',this.value)"></td><td><input type="text" value="${esc(r.installer)}" onchange="editOrder(${pi},${ri},'installer',this.value)"></td><td><input type="text" value="${esc(r.note)}" onchange="editOrder(${pi},${ri},'note',this.value)"></td><td><button class="delete" onclick="delOrderRow(${pi},${ri})">×</button></td></tr>`}
 function materialCell(pi,ri,k,v,title){return `<td class="center"><button class="material ${v?'on':''}" title="${title}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button></td>`}
@@ -938,12 +1030,59 @@ function orderMobileRow(pi,ri,r){return `<div class="m-row"><div class="m-grid">
 function mobileCheck(pi,ri,k,v,label){return `<div class="m-check"><button class="material ${v?'on':''}" onclick="toggleOrder(${pi},${ri},'${k}',${!v})"></button>${label}</div>`}
 async function editOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
 async function toggleOrder(pi,ri,k,v){ordersData[pi].rows[ri][k]=v;renderOrders();renderBrickSources();try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'PATCH',body:JSON.stringify({[k]:v,updated_at:new Date().toISOString()})})}catch(e){toast('Ошибка сохранения')}}
-function togglePeriod(pi){const p=ordersData[pi],open=!periodOpen(p.id);setPeriodOpen(p.id,open);renderOrders()}
+function togglePeriod(pi){const p=ordersData[pi];if(p.archived){const open=!archivePeriodOpen(p.id);setArchivePeriodOpen(p.id,open);renderArchivePanel()}else{const open=!periodOpen(p.id);setPeriodOpen(p.id,open);renderOrders()}}
 async function editPeriod(pi,v){ordersData[pi].period=v;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'PATCH',body:JSON.stringify({title:v})})}catch(e){toast('Ошибка сохранения')}}
-async function addPeriod(){try{const r=await api('periods',{method:'POST',body:JSON.stringify({title:'Новый период',sort_order:ordersData.length})});const p={id:r[0].id,period:r[0].title,rows:[]};ordersData.push(p);setPeriodOpen(p.id,true);await addOrderRow(ordersData.length-1);renderOrders()}catch(e){toast('Не удалось создать период')}}
-async function addOrderRow(pi){try{const r=blankOrder(),x=await api('orders',{method:'POST',body:JSON.stringify({period_id:ordersData[pi].id,...r,sort_order:ordersData[pi].rows.length})});ordersData[pi].rows.push({...r,id:x[0].id});setPeriodOpen(ordersData[pi].id,true);renderOrders()}catch(e){toast('Не удалось добавить строку')}}
-async function delOrderRow(pi,ri){if(!confirm('Удалить строку?'))return;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'DELETE'});ordersData[pi].rows.splice(ri,1);renderOrders();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
-async function delPeriod(pi){if(!confirm('Удалить период?'))return;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'DELETE'});ordersData.splice(pi,1);renderOrders()}catch(e){toast('Ошибка удаления периода')}}
+async function toggleArchivePeriod(pi,archived){
+  const p=ordersData[pi];
+  try{
+    await api('periods?id=eq.'+p.id,{method:'PATCH',body:JSON.stringify({archived:!!archived})});
+    p.archived=!!archived;
+    renderOrders();renderArchivePanel();
+    toast(archived?'Период перенесён в архив':'Период возвращён из архива');
+  }catch(e){
+    toast('Ошибка. Проверьте, что в таблице periods есть столбец archived (boolean).');
+    renderOrders();renderArchivePanel();
+  }
+}
+function toggleArchivePanel(){
+  archivePanelOpen=!archivePanelOpen;
+  renderArchivePanel();
+}
+function renderArchivePanel(){
+  const el=document.getElementById('archivePanel');if(!el)return;
+  if(!archivePanelOpen){el.innerHTML='';return}
+  const archived=ordersData.filter(p=>p.archived);
+  if(!archived.length){
+    el.innerHTML=`<div class="archive-panel"><div class="archive-panel-head"><span>🗄 Архив периодов</span><button onclick="toggleArchivePanel()" title="Скрыть">×</button></div><div class="archive-empty">В архиве пусто</div></div>`;
+    return;
+  }
+  let html=`<div class="archive-panel">
+    <div class="archive-panel-head"><span class="archived-chip-label">🗄 Архив периодов · ${archived.length}</span><button onclick="toggleArchivePanel()" title="Скрыть">×</button></div>
+    <div class="periods-chips">`;
+  archived.forEach((p)=>{
+    html+=`<button class="period-chip archived" onclick="openArchivePeriod(${ordersData.indexOf(p)})" title="Развернуть архивный период">${esc(p.period||'Без названия')}</button>`;
+  });
+  html+='</div>';
+  // Развёрнутые архивные периоды
+  archived.forEach((p)=>{
+    if(!archivePeriodOpen(p.id))return;
+    const pi=ordersData.indexOf(p);
+    const rows=p.rows;
+    html+=renderPeriodBlock(p,pi,rows,true);
+  });
+  html+='</div>';
+  el.innerHTML=html;
+}
+function openArchivePeriod(pi){
+  const p=ordersData[pi];
+  const open=!archivePeriodOpen(p.id);
+  setArchivePeriodOpen(p.id,open);
+  renderArchivePanel();
+}
+async function addPeriod(){try{const r=await api('periods',{method:'POST',body:JSON.stringify({title:'Новый период',sort_order:ordersData.length,archived:false})});const p={id:r[0].id,period:r[0].title,rows:[],archived:false};ordersData.push(p);setPeriodOpen(p.id,true);await addOrderRow(ordersData.length-1);renderOrders()}catch(e){toast('Не удалось создать период')}}
+async function addOrderRow(pi){try{const r=blankOrder(),x=await api('orders',{method:'POST',body:JSON.stringify({period_id:ordersData[pi].id,...r,sort_order:ordersData[pi].rows.length})});ordersData[pi].rows.push({...r,id:x[0].id});if(ordersData[pi].archived){setArchivePeriodOpen(ordersData[pi].id,true);renderArchivePanel()}else{setPeriodOpen(ordersData[pi].id,true);renderOrders()}}catch(e){toast('Не удалось добавить строку')}}
+async function delOrderRow(pi,ri){if(!confirm('Удалить строку?'))return;try{await api('orders?id=eq.'+ordersData[pi].rows[ri].id,{method:'DELETE'});ordersData[pi].rows.splice(ri,1);if(ordersData[pi].archived)renderArchivePanel();else renderOrders();renderBrickSources()}catch(e){toast('Ошибка удаления')}}
+async function delPeriod(pi){if(!confirm('Удалить период?'))return;try{await api('periods?id=eq.'+ordersData[pi].id,{method:'DELETE'});ordersData.splice(pi,1);renderOrders();renderArchivePanel()}catch(e){toast('Ошибка удаления периода')}}
 
 function clearSearch(id,fn){document.getElementById(id).value='';fn();document.getElementById(id).focus()}
 
@@ -1022,7 +1161,9 @@ async function commitExpenses(){
   if(!expenseRows.length && bal===0){toast('Нечего сохранять');return}
   const rawTotal=bal-sum;
   const historyTotal=rawTotal>0?rawTotal:0;
-  const newBalance=rawTotal>0?rawTotal:0;
+  // Спрашиваем, обнулить баланс или перенести итог
+  const zeroOut=confirm('Обнулить баланс после сохранения?\n\nОК — обнулить баланс (0)\nОтмена — перенести итог в баланс');
+  const newBalance=zeroOut?0:(rawTotal>0?rawTotal:0);
   const now=new Date();
   const name=now.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'})+' '+now.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit'});
   const items=expenseRows.map(r=>({date:r.date||'',description:r.description||'',amount:parseNum(r.amount)}));
@@ -1032,7 +1173,8 @@ async function commitExpenses(){
     renderExpenseRows();renderExpenseTotal();
     await clearExpenseDraft(newBalance);
     await loadAll(true);
-    toast(rawTotal<0?'Сохранено · отрицательный итог обнулён':'Сохранено · положительный итог перенесён в баланс');
+    if(zeroOut) toast('Сохранено · баланс обнулён');
+    else toast(rawTotal>0?'Сохранено · итог перенесён в баланс':'Сохранено · отрицательный итог обнулён');
   }catch(e){
     toast('Не удалось сохранить. Проверьте таблицы расходов в Supabase.');
   }
@@ -1052,7 +1194,7 @@ function renderExpenseHistory(){
   if(!expenseHistory.length){openExpenseHistoryIds.clear();list.innerHTML='<div class="card"><div class="empty">История пуста</div></div>';return}
   const validIds=new Set(expenseHistory.map(h=>h.id));
   openExpenseHistoryIds=new Set([...openExpenseHistoryIds].filter(id=>validIds.has(id)));
-  list.innerHTML=expenseHistory.map((h,idx)=>{
+  list.innerHTML=expenseHistory.map((h)=>{
     const items=Array.isArray(h.items)?h.items:[];
     const rows=items.length?items.map(it=>`
       <tr>
@@ -1091,8 +1233,8 @@ function toggleExpenseHistory(id){
 
 /* === DASHBOARD === */
 let dashCharts={};
+let dashboardTimer=null;
 const DASH_COLORS={orange:'#ff8c1a',orangeSoft:'rgba(255,140,26,.25)',green:'#2ea043',blue:'#4a9eff',red:'#ff5c5c',purple:'#a78bfa',gray:'#5a5a5e'};
-function fmtNum(n){return (n||0).toLocaleString('ru-RU')}
 function destroyChart(key){if(dashCharts[key]){try{dashCharts[key].destroy()}catch(e){} delete dashCharts[key]}}
 function isLight(){return document.documentElement.getAttribute('data-theme')==='light'}
 function chartDefaults(){
@@ -1115,7 +1257,7 @@ function applyChartDefaults(){
 }
 
 function collectDashboardStats(){
-  const stats={ordersActive:0,ordersReady:0,dodelkiActive:0,dodelkiDone:0,orderedActive:0,orderedDone:0,avgOrderDays:null,workers:{},months:{},materials:{ldsp:0,furniture:0,facades:0,assembly_ready:0},ordersTotal:0};
+  const stats={ordersActive:0,ordersReady:0,dodelkiActive:0,dodelkiDone:0,orderedActive:0,orderedDone:0,avgOrderDays:null,workers:{},materials:{ldsp:0,furniture:0,facades:0,assembly_ready:0},ordersTotal:0};
   let sumDays=0, countDays=0;
   for(const p of ordersData)for(const r of p.rows){
     stats.ordersTotal++;
@@ -1130,28 +1272,12 @@ function collectDashboardStats(){
       const a=new Date(r.created_at).getTime(), b=new Date(r.updated_at).getTime();
       if(!isNaN(a)&&!isNaN(b)&&b>a){sumDays+=(b-a)/86400000;countDays++}
     }
-    if(r.ready&&r.updated_at){
-      const d=new Date(r.updated_at);
-      if(!isNaN(d.getTime())){
-        const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-        if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
-        stats.months[key].orders++;
-      }
-    }
   }
   if(countDays) stats.avgOrderDays=sumDays/countDays;
   for(const r of dodelkiRows){
     if(r.completed) stats.dodelkiDone++; else stats.dodelkiActive++;
     const worker=(r.installer||'').trim();
     if(worker){if(!stats.workers[worker]) stats.workers[worker]={orders:0,dodelki:0};stats.workers[worker].dodelki++}
-    if(r.completed&&r.updated_at){
-      const d=new Date(r.updated_at);
-      if(!isNaN(d.getTime())){
-        const key=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
-        if(!stats.months[key]) stats.months[key]={orders:0,dodelki:0};
-        stats.months[key].dodelki++;
-      }
-    }
   }
   for(const r of orderedRows){if(orderedDone(r)) stats.orderedDone++; else stats.orderedActive++}
   return stats;
@@ -1187,16 +1313,6 @@ function renderWorkersChart(stats){
   names.sort((a,b)=>{const sa=stats.workers[a].orders+stats.workers[a].dodelki;const sb=stats.workers[b].orders+stats.workers[b].dodelki;return sb-sa});
   dashCharts.workers=new Chart(ctx,{type:'bar',data:{labels:names,datasets:[{label:'Заказы',data:names.map(n=>stats.workers[n].orders),backgroundColor:DASH_COLORS.orange,borderRadius:6,stack:'w'},{label:'Доделки',data:names.map(n=>stats.workers[n].dodelki),backgroundColor:DASH_COLORS.blue,borderRadius:6,stack:'w'}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',scales:{x:{stacked:true,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{precision:0}},y:{stacked:true,grid:{display:false}}},plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10}}}});
 }
-function renderMonthsChart(stats){
-  destroyChart('months');
-  const ctx=document.getElementById('chartMonths');if(!ctx||!window.Chart)return;
-  const d=chartDefaults();
-  const keys=Object.keys(stats.months).sort();
-  if(!keys.length){dashCharts.months=new Chart(ctx,{type:'line',data:{labels:['Нет данных'],datasets:[{data:[0],borderColor:DASH_COLORS.gray}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}}}});return}
-  const months=['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
-  const labels=keys.map(k=>{const [y,m]=k.split('-');return months[parseInt(m,10)-1]+' '+y.slice(2)});
-  dashCharts.months=new Chart(ctx,{type:'line',data:{labels,datasets:[{label:'Заказы закрыто',data:keys.map(k=>stats.months[k].orders),borderColor:DASH_COLORS.orange,backgroundColor:DASH_COLORS.orangeSoft,tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.orange},{label:'Доделки закрыто',data:keys.map(k=>stats.months[k].dodelki),borderColor:DASH_COLORS.blue,backgroundColor:'rgba(74,158,255,.20)',tension:.35,fill:true,pointRadius:4,pointHoverRadius:6,pointBackgroundColor:DASH_COLORS.blue}]},options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales:{x:{grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'}},y:{beginAtZero:true,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{precision:0}}},plugins:{legend:{position:'bottom',labels:{padding:12,boxWidth:12,boxHeight:12,usePointStyle:true,pointStyle:'circle'}},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10}}}});
-}
 function renderMaterialsChart(stats){
   destroyChart('materials');
   const ctx=document.getElementById('chartMaterials');if(!ctx||!window.Chart)return;
@@ -1207,16 +1323,36 @@ function renderMaterialsChart(stats){
   const percents=data.map(v=>Math.round(v/total*100));
   dashCharts.materials=new Chart(ctx,{type:'bar',data:{labels,datasets:[{label:'% заказов',data:percents,backgroundColor:[DASH_COLORS.orange,DASH_COLORS.blue,DASH_COLORS.purple,DASH_COLORS.green],borderRadius:6,maxBarThickness:42}]},options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true,max:100,grid:{color:isLight()?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)'},ticks:{callback:v=>v+'%'}},x:{grid:{display:false}}},plugins:{legend:{display:false},tooltip:{backgroundColor:d.tooltipBg,borderColor:d.tooltipBorder,borderWidth:1,padding:10,callbacks:{label:(item)=>`${item.parsed.y}% (${data[item.dataIndex]} из ${stats.ordersTotal})`}}}}});
 }
-function renderDashboard(){
+function renderDashboardNow(){
   if(!window.Chart)return;
   applyChartDefaults();
   const stats=collectDashboardStats();
   renderKpis(stats);
   renderOrdersStatusChart(stats);
   renderWorkersChart(stats);
-  renderMonthsChart(stats);
   renderMaterialsChart(stats);
 }
+/* Плавное «обнуление» графиков перед перерисовкой */
+function renderDashboard(){
+  const section=document.getElementById('dashboard');
+  if(!section||section.style.display!=='block')return;
+  const wraps=[document.getElementById('wrapOrdersStatus'),document.getElementById('wrapWorkers'),document.getElementById('wrapMaterials')].filter(Boolean);
+  wraps.forEach(w=>w.classList.add('fading'));
+  setTimeout(()=>{
+    renderDashboardNow();
+    wraps.forEach(w=>w.classList.remove('fading'));
+  },480);
+}
+function scheduleDashboardAutoRefresh(){
+  if(dashboardTimer) clearInterval(dashboardTimer);
+  dashboardTimer=setInterval(()=>{
+    const section=document.getElementById('dashboard');
+    if(section&&section.style.display==='block'&&!isEditing()){
+      renderDashboard();
+    }
+  },8000);
+}
+scheduleDashboardAutoRefresh();
 
 /* === НАВИГАЦИЯ === */
 const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Эксп. Dash',expenses:'Расходы'};
@@ -1229,7 +1365,7 @@ function showSection(id,push=true){
   s.style.display='block';
   document.getElementById('pageTitle').textContent=sectionTitles[id]||'';
   window.scrollTo({top:0,behavior:'smooth'});
-  if(id==='dashboard') setTimeout(renderDashboard,50);
+  if(id==='dashboard') setTimeout(()=>renderDashboard(),50);
   if(id==='expenses'){renderExpenseRows();renderExpenseTotal();renderExpenseHistory()}
   if(push)history.pushState({},'', '#'+id);
 }
@@ -1237,11 +1373,10 @@ function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles
 window.addEventListener('popstate',routeFromHash);window.addEventListener('hashchange',routeFromHash);
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
 
-/* При смене темы перерисовываем графики, чтобы обновились цвета */
 const _origToggleTheme=toggleTheme;
 toggleTheme=function(){
   _origToggleTheme();
-  if(document.getElementById('dashboard').style.display==='block') renderDashboard();
+  if(document.getElementById('dashboard').style.display==='block') renderDashboardNow();
 };
 
 (async()=>{await loadScheduleState();await loadAll();routeFromHash();renderExpenseRows();renderExpenseTotal();renderExpenseHistory()})();
