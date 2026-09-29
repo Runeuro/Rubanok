@@ -1309,7 +1309,7 @@ function toggleExpenseHistory(id){
 /* === НАПОМИНАНИЯ === */
 function gmt7Now(){
   // В текущей версии отображаем время UTC+3.
-  return new Date(Date.now()+3*60*60*1000);
+  return new Date(Date.now()+0*60*60*1000);
 }
 function parseReminderDate(v){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v||''));return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3])):null}
 function getReminderTarget(r,from=new Date()){
