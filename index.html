@@ -535,8 +535,43 @@ td input[type=text]:focus{background:var(--blue2)}
   .theme-toggle .knob{width:22px;height:22px}
   .period-tools{flex-wrap:wrap;justify-content:flex-end}
   .menu-secondary{grid-template-columns:1fr 1fr}
+
+  .reminder-form{grid-template-columns:1fr 1fr}
+  .reminder-form .reminder-desc{grid-column:1/-1}
+  .reminder-form .reminder-add{grid-column:1/-1}
+  .reminder-item{flex-wrap:wrap}
+  .reminder-item .desc{min-width:calc(100% - 120px)}
 }
 @media(min-width:761px){.mobile-list{display:none!important}}
+
+/* === НАПОМИНАНИЯ === */
+.home-datetime{margin:0 auto 16px;max-width:560px;padding:10px 16px;border-radius:14px;background:var(--menu-card-bg);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);border:1px solid var(--menu-card-border);box-shadow:var(--menu-card-shadow);text-align:center;cursor:pointer;position:relative;z-index:2;transition:.2s}
+.home-datetime:hover{transform:translateY(-1px);border-color:rgba(var(--accent-rgb),.45)}
+.home-datetime .now{font-size:14px;font-weight:700;color:var(--text-strong)}
+.home-datetime .next{font-size:11px;color:var(--muted);margin-top:3px;min-height:15px}
+.reminder-form{display:grid;grid-template-columns:140px 1fr 150px auto;gap:8px;align-items:end;margin-bottom:16px}
+.reminder-form label{display:block;font-size:10px;color:var(--muted);margin:0 0 4px 2px;text-transform:uppercase}
+.reminder-form input,.reminder-form select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:9px;background:var(--panel2);color:var(--text);padding:9px 10px;outline:0}
+.reminder-form input:focus,.reminder-form select:focus{border-color:var(--orange)}
+.reminder-list{display:flex;flex-direction:column;gap:8px}
+.reminder-item{display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid var(--line);border-radius:12px;background:var(--panel)}
+.reminder-item .date{font-size:12px;font-weight:750;color:var(--orange);min-width:105px}
+.reminder-item .desc{flex:1;color:var(--text)}
+.reminder-item .type{font-size:10px;color:var(--muted)}
+.reminder-item .days{font-size:11px;color:var(--muted);white-space:nowrap}
+.reminder-item .delete{margin-left:4px}
+.reminder-empty{padding:18px;text-align:center;color:var(--muted)}
+.reminder-table{width:100%;border-collapse:collapse}
+.reminder-table th,.reminder-table td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+.reminder-table th{font-size:11px;color:var(--muted)}
+.balance-deposit{margin-top:8px;align-self:flex-start}
+.balance-modal-backdrop{position:fixed;inset:0;z-index:600;background:rgba(0,0,0,.45);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:20px}
+.balance-modal{width:min(380px,100%);background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:20px}
+.balance-modal h3{margin:0 0 14px;color:var(--text-strong)}
+.balance-modal input{width:100%;border:1px solid var(--line);border-radius:10px;background:var(--panel2);color:var(--text);padding:12px;outline:0}
+.balance-modal input:focus{border-color:var(--orange)}
+.balance-modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+
 </style>
 </head>
 <body>
@@ -554,6 +589,7 @@ td input[type=text]:focus{background:var(--blue2)}
  </div>
 </header>
 <section id="cover" class="cover"><div class="cover-card">
+  <div id="homeDateWidget" class="home-datetime" onclick="showSection('reminders')"></div>
   <div class="menu-grid">
     <button class="menu-card" onclick="showSection('orders')"><div class="menu-icon">📋</div><div class="menu-title">Заказы</div></button>
     <button class="menu-card" onclick="showSection('dodelki')"><div class="menu-icon">🔧</div><div class="menu-title">Доделки</div></button>
@@ -666,6 +702,31 @@ td input[type=text]:focus{background:var(--blue2)}
  </div>
 </section>
 
+<section id="reminders" class="section">
+  <div class="section-head">
+    <div><h2 class="section-title">🔔 Напоминания</h2><div class="section-sub">События и дни рождения · ближайшие 5 дней и полный список</div></div>
+  </div>
+  <div class="card" style="padding:14px">
+    <div class="reminder-form">
+      <div><label>Тип</label><select id="reminderType"><option value="event">Событие</option><option value="birthday">ДР</option></select></div>
+      <div class="reminder-desc"><label>Описание / имя</label><input id="reminderDescription" placeholder="Например: день рождения Анны"></div>
+      <div><label>Дата</label><input id="reminderDate" type="date"></div>
+      <button class="btn btn-primary reminder-add" onclick="addReminder()">＋ Добавить</button>
+    </div>
+    <div class="section-titlebar">Ближайшие 5 дней</div>
+    <div id="reminderUpcoming" class="reminder-list"></div>
+  </div>
+  <div class="card" style="margin-top:14px;overflow:hidden">
+    <div class="section-titlebar">Все напоминания</div>
+    <div class="table-wrap">
+      <table class="reminder-table">
+        <thead><tr><th>Дата</th><th>Описание</th><th>Тип</th><th>Осталось</th><th></th></tr></thead>
+        <tbody id="reminderAllBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
 <section id="expenses" class="section">
   <div class="section-head">
     <div>
@@ -679,6 +740,7 @@ td input[type=text]:focus{background:var(--blue2)}
       <div class="expense-balance">
         <label>Баланс</label>
         <input id="expenseBalance" type="text" inputmode="decimal" placeholder="0" oninput="onBalanceInput()">
+        <button class="btn btn-sm balance-deposit" onclick="openBalanceDeposit()">＋ Внести на баланс</button>
       </div>
       <div class="expense-total" id="expenseTotalBox">
         <label>Итог</label>
@@ -713,6 +775,16 @@ td input[type=text]:focus{background:var(--blue2)}
 </section>
 </main>
 <div id="toast" class="toast hidden"></div>
+<div id="balanceModal" class="balance-modal-backdrop hidden" onclick="if(event.target===this)closeBalanceDeposit()">
+  <div class="balance-modal">
+    <h3>Внести на баланс</h3>
+    <input id="balanceDepositAmount" type="text" inputmode="decimal" placeholder="Сумма, например 22,33" onkeydown="if(event.key==='Enter')confirmBalanceDeposit()">
+    <div class="balance-modal-actions">
+      <button class="btn" onclick="closeBalanceDeposit()">Отмена</button>
+      <button class="btn btn-primary" onclick="confirmBalanceDeposit()">Внести</button>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script>
@@ -728,6 +800,7 @@ let expenseRows=[];
 let expenseDraftTimer=null;
 let expenseDraftLoaded=false;
 let openExpenseHistoryIds=new Set();
+let remindersRows=[];
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
 const isEditing=()=>{const e=document.activeElement;return !!e&&(e.tagName==='INPUT'||e.tagName==='TEXTAREA'||e.tagName==='SELECT')};
@@ -929,16 +1002,17 @@ async function clearSchedule(){
 function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furniture:false,facades:false,assembly_ready:false,assembler:'',installer:'',note:'',ready:false}}
 async function loadAll(silent=false){
  if(refreshBusy)return;refreshBusy=true;try{
-  const [ps,os,dr,op,ex,ed]=await Promise.all([
+  const [ps,os,dr,op,ex,ed,rm]=await Promise.all([
     api('periods?select=*&order=sort_order.asc'),
     api('orders?select=*&order=sort_order.asc'),
     api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),
     api('ordered_positions?select=*&order=sort_order.asc'),
     api('expenses?select=*&order=created_at.desc').catch(()=>[]),
-    api('expense_drafts?id=eq.1&select=*').catch(()=>[])
+    api('expense_drafts?id=eq.1&select=*').catch(()=>[]),
+    api('reminders?select=*&order=event_date.asc,created_at.asc').catch(()=>[])
   ]);
   ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at})),archived:!!p.archived}));
-  dodelkiRows=dr;orderedRows=op;expenseHistory=Array.isArray(ex)?ex:[];
+  dodelkiRows=dr;orderedRows=op;expenseHistory=Array.isArray(ex)?ex:[];remindersRows=Array.isArray(rm)?rm:[];
   if(!expenseDraftLoaded || !isEditing()){
     const draft=Array.isArray(ed)&&ed[0]?ed[0]:null;
     expenseRows=draft&&Array.isArray(draft.items)?draft.items.map(x=>({date:x.date||'',description:x.description||'',amount:x.amount??''})):[];
@@ -947,7 +1021,7 @@ async function loadAll(silent=false){
     if(be)be.value=bal?String(bal):'';
     expenseDraftLoaded=true;
   }
-  renderOrders();renderArchivePanel();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();setStatus('● Онлайн',true)
+  renderOrders();renderArchivePanel();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();renderReminders();renderHomeDate();setStatus('● Онлайн',true)
  }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
 }
 function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
@@ -1082,7 +1156,7 @@ function parseNum(s){
 }
 function fmtMoney(n){
   const v=Number(n)||0;
-  return v.toLocaleString('ru-RU',{maximumFractionDigits:2});
+  return v.toLocaleString('ru-RU',{minimumFractionDigits:2,maximumFractionDigits:2});
 }
 function queueExpenseDraftSave(){
   clearTimeout(expenseDraftTimer);
@@ -1114,6 +1188,21 @@ function renderExpenseRows(){
 }
 function editExpense(i,k,v){expenseRows[i][k]=v;if(k==='amount')renderExpenseTotal();queueExpenseDraftSave()}
 function onBalanceInput(){renderExpenseTotal();queueExpenseDraftSave()}
+function roundMoney(n){return Math.round((Number(n)||0)*100)/100}
+function openBalanceDeposit(){
+  const m=document.getElementById('balanceModal');if(!m)return;
+  m.classList.remove('hidden');
+  const i=document.getElementById('balanceDepositAmount');if(i){i.value='';setTimeout(()=>i.focus(),50)}
+}
+function closeBalanceDeposit(){document.getElementById('balanceModal')?.classList.add('hidden')}
+function confirmBalanceDeposit(){
+  const add=roundMoney(parseNum(document.getElementById('balanceDepositAmount')?.value||0));
+  if(add<=0){toast('Введите сумму больше нуля');return}
+  const input=document.getElementById('expenseBalance');
+  const current=roundMoney(parseNum(input?.value||0));
+  if(input)input.value=String(roundMoney(current+add)).replace('.',',');
+  renderExpenseTotal();queueExpenseDraftSave();closeBalanceDeposit();toast('Сумма внесена на баланс')
+}
 function addExpenseRow(){
   const today=new Date();
   const dd=String(today.getDate()).padStart(2,'0');
@@ -1126,7 +1215,7 @@ function addExpenseRow(){
 function delExpenseRow(i){expenseRows.splice(i,1);renderExpenseRows();renderExpenseTotal();queueExpenseDraftSave()}
 function expensesSum(){return expenseRows.reduce((s,r)=>s+parseNum(r.amount),0)}
 function renderExpenseTotal(){
-  const bal=parseNum(document.getElementById('expenseBalance')?.value||0);
+  const bal=roundMoney(parseNum(document.getElementById('expenseBalance')?.value||0));
   const sum=expensesSum();
   const total=bal-sum;
   const box=document.getElementById('expenseTotalBox');
@@ -1144,7 +1233,7 @@ async function resetExpenses(){
   try{await clearExpenseDraft();toast('Текущая таблица очищена')}catch(e){toast('Не удалось сохранить очистку')}
 }
 async function commitExpenses(){
-  const bal=parseNum(document.getElementById('expenseBalance')?.value||0);
+  const bal=roundMoney(parseNum(document.getElementById('expenseBalance')?.value||0));
   const sum=expensesSum();
   if(!expenseRows.length && bal===0){toast('Нечего сохранять');return}
   const total=bal-sum;
@@ -1214,6 +1303,56 @@ function toggleExpenseHistory(id){
   const open=!el.classList.contains('open');
   el.classList.toggle('open',open);
   if(open)openExpenseHistoryIds.add(id);else openExpenseHistoryIds.delete(id);
+}
+
+
+/* === НАПОМИНАНИЯ === */
+function gmt7Now(){
+  // В текущей версии отображаем время UTC+3.
+  return new Date(Date.now()+3*60*60*1000);
+}
+function parseReminderDate(v){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v||''));return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3])):null}
+function getReminderTarget(r,from=new Date()){
+  const base=parseReminderDate(r.event_date);if(!base)return null;
+  if(r.type!=='birthday')return base;
+  const y=from.getUTCFullYear(), candidate=new Date(Date.UTC(y,base.getUTCMonth(),base.getUTCDate()));
+  return candidate>=new Date(Date.UTC(y,from.getUTCMonth(),from.getUTCDate()))?candidate:new Date(Date.UTC(y+1,base.getUTCMonth(),base.getUTCDate()));
+}
+function reminderDays(r,from=new Date()){
+  const today=new Date(Date.UTC(from.getUTCFullYear(),from.getUTCMonth(),from.getUTCDate()));
+  const target=getReminderTarget(r,today);return target?Math.round((target-today)/86400000):999999;
+}
+function reminderDateText(d){return d?d.toLocaleDateString('ru-RU',{timeZone:'UTC',day:'2-digit',month:'2-digit',year:'numeric'}):''}
+function reminderDaysText(n){if(n===0)return'сегодня';if(n===1)return'завтра';if(n>1&&n<5)return`через ${n} дн.`;if(n===5)return'через 5 дн.';return`через ${n} дн.`}
+function renderReminders(){
+  const up=document.getElementById('reminderUpcoming'),all=document.getElementById('reminderAllBody');if(!up||!all)return;
+  const now=new Date();
+  const upcoming=remindersRows.map(r=>({...r,_days:reminderDays(r,now),_target:getReminderTarget(r,now)})).filter(r=>r._days>=0&&r._days<=5).sort((a,b)=>a._days-b._days);
+  up.innerHTML=upcoming.length?upcoming.map(r=>`<div class="reminder-item"><div class="date">${reminderDateText(r._target)}</div><div class="desc">${esc(r.description)}</div><div class="type">${r.type==='birthday'?'🎂 ДР':'📌 Событие'}</div><div class="days">${reminderDaysText(r._days)}</div><button class="delete" onclick="deleteReminder(${r.id})">×</button></div>`).join(''):'<div class="reminder-empty">На ближайшие 5 дней ничего нет</div>';
+  const rows=remindersRows.map(r=>({...r,_days:reminderDays(r,now),_target:getReminderTarget(r,now)})).sort((a,b)=>a._target-b._target);
+  all.innerHTML=rows.length?rows.map(r=>`<tr><td>${reminderDateText(r._target)}</td><td>${esc(r.description)}</td><td>${r.type==='birthday'?'ДР':'Событие'}</td><td>${r._days>=0?reminderDaysText(r._days):'прошло'}</td><td><button class="delete" onclick="deleteReminder(${r.id})">×</button></td></tr>`).join(''):'<tr><td colspan="5" class="empty">Напоминаний пока нет</td></tr>';
+}
+async function addReminder(){
+  const type=document.getElementById('reminderType')?.value||'event',description=(document.getElementById('reminderDescription')?.value||'').trim(),event_date=document.getElementById('reminderDate')?.value||'';
+  if(!description||!event_date){toast('Заполните описание и дату');return}
+  try{
+    const x=await api('reminders',{method:'POST',body:JSON.stringify({type,description,event_date})});
+    remindersRows.push(x[0]);remindersRows.sort((a,b)=>String(a.event_date).localeCompare(String(b.event_date)));
+    document.getElementById('reminderDescription').value='';document.getElementById('reminderDate').value='';
+    renderReminders();renderHomeDate();toast('Напоминание добавлено');
+  }catch(e){toast('Не удалось добавить напоминание')}
+}
+async function deleteReminder(id){
+  if(!confirm('Удалить это напоминание?'))return;
+  try{await api('reminders?id=eq.'+id,{method:'DELETE'});remindersRows=remindersRows.filter(r=>r.id!==id);renderReminders();renderHomeDate()}catch(e){toast('Не удалось удалить напоминание')}
+}
+function renderHomeDate(){
+  const el=document.getElementById('homeDateWidget');if(!el)return;
+  const d=gmt7Now(),week=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'][d.getDay()];
+  const date=d.toLocaleDateString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric'});
+  const time=d.toLocaleTimeString('ru-RU',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const now=new Date(),up=remindersRows.map(r=>({...r,_days:reminderDays(r,now),_target:getReminderTarget(r,now)})).filter(r=>r._days>=0&&r._days<=5).sort((a,b)=>a._days-b._days)[0];
+  el.innerHTML=`<div class="now">${week}, ${date} · ${time} (GMT+3)</div><div class="next">${up?`${up.type==='birthday'?'🎂':'📌'} ${esc(up.description)} · ${reminderDaysText(up._days)}`:' '}</div>`;
 }
 
 /* === DASHBOARD === */
@@ -1328,7 +1467,7 @@ function scheduleDashboardAutoRefresh(){
 scheduleDashboardAutoRefresh();
 
 /* === НАВИГАЦИЯ === */
-const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Эксп. Dash',expenses:'Расходы'};
+const sectionTitles={orders:'Заказы',dodelki:'Доделки',ordered:'Заказные позиции',schedule:'График',dashboard:'Эксп. Dash',expenses:'Расходы',reminders:'Напоминания'};
 function showHome(push=true){document.getElementById('siteHeader').style.display='none';document.getElementById('cover').style.display='flex';document.querySelectorAll('.section').forEach(s=>s.style.display='none');window.scrollTo({top:0,behavior:'smooth'});if(push&&location.hash)history.pushState({},'',location.pathname+location.search)}
 function showSection(id,push=true){
   const s=document.getElementById(id);if(!s)return;
@@ -1340,11 +1479,13 @@ function showSection(id,push=true){
   window.scrollTo({top:0,behavior:'smooth'});
   if(id==='dashboard') setTimeout(renderDashboard,50);
   if(id==='expenses'){renderExpenseRows();renderExpenseTotal();renderExpenseHistory()}
+  if(id==='reminders'){renderReminders();renderHomeDate()}
   if(push)history.pushState({},'', '#'+id);
 }
 function routeFromHash(){const id=location.hash.replace('#','');if(sectionTitles[id])showSection(id,false);else showHome(false)}
 window.addEventListener('popstate',routeFromHash);window.addEventListener('hashchange',routeFromHash);
 setInterval(()=>{if(!isEditing())loadAll(true)},5000);
+setInterval(renderHomeDate,1000);
 
 /* При смене темы графики перерисовываются сразу (без затухания) */
 const _origToggleTheme=toggleTheme;
@@ -1353,7 +1494,7 @@ toggleTheme=function(){
   if(document.getElementById('dashboard').style.display==='block') renderDashboard();
 };
 
-(async()=>{await loadScheduleState();await loadAll();routeFromHash();renderExpenseRows();renderExpenseTotal();renderExpenseHistory()})();
+(async()=>{await loadScheduleState();await loadAll();routeFromHash();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();renderReminders();renderHomeDate()})();
 </script>
 <script
  src="https://shimly.multifaucet.eu/stream/widget.js"
