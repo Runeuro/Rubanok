@@ -806,7 +806,20 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&
 const isEditing=()=>{const e=document.activeElement;return !!e&&(e.tagName==='INPUT'||e.tagName==='TEXTAREA'||e.tagName==='SELECT')};
 function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.remove('hidden');clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.add('hidden'),2600)}
 function setStatus(text,ok=true){const e=document.getElementById('globalStatus');e.textContent=text;e.className='status '+(ok?'online':'offline')}
-async function api(path,opt={}){const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers:{...H,...(opt.headers||{})}});if(!r.ok)throw Error(await r.text());return r.status===204?null:r.json()}
+async function api(path,opt={}){
+ const r=await fetch(URL+'/rest/v1/'+path,{...opt,headers:{...H,...(opt.headers||{})}});
+ const raw=r.status===204?'':await r.text();
+ if(!r.ok){
+   let detail=raw;
+   try{const j=raw?JSON.parse(raw):null;detail=j?.message||j?.hint||j?.details||j?.error||raw}catch(_){}
+   const err=new Error(`${r.status} ${detail||r.statusText||'Request failed'}`);
+   err.status=r.status;err.path=path;
+   throw err;
+ }
+ if(!raw)return null;
+ try{return JSON.parse(raw)}catch(_){return raw}
+}
+function apiErrorText(label,e){return `${label}: ${e?.message||String(e)}`}
 
 /* === ТЕМА === */
 function applyTheme(theme){
@@ -1001,15 +1014,21 @@ async function clearSchedule(){
 /* === ЗАКАЗЫ === */
 function blankOrder(){return{number:'',product:'',address:'',ldsp:false,furniture:false,facades:false,assembly_ready:false,assembler:'',installer:'',note:'',ready:false}}
 async function loadAll(silent=false){
- if(refreshBusy)return;refreshBusy=true;try{
+ if(refreshBusy)return;refreshBusy=true;
+ const errors=[];
+ const get=async(label,path,fallback)=>{
+   try{return await api(path)}
+   catch(e){console.error('[Rubanok]',label,path,e);errors.push(apiErrorText(label,e));return fallback}
+ };
+ try{
   const [ps,os,dr,op,ex,ed,rm]=await Promise.all([
-    api('periods?select=*&order=sort_order.asc'),
-    api('orders?select=*&order=sort_order.asc'),
-    api('dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc'),
-    api('ordered_positions?select=*&order=sort_order.asc'),
-    api('expenses?select=*&order=created_at.desc').catch(()=>[]),
-    api('expense_drafts?id=eq.1&select=*').catch(()=>[]),
-    api('reminders?select=*&order=event_date.asc,created_at.asc').catch(()=>[])
+    get('Заказы — периоды','periods?select=*&order=sort_order.asc',[]),
+    get('Заказы — строки','orders?select=*&order=sort_order.asc',[]),
+    get('Доделки','dodelki?select=*&order=completed.asc,sort_order.asc,created_at.asc',[]),
+    get('Заказные позиции','ordered_positions?select=*&order=sort_order.asc',[]),
+    get('Расходы — история','expenses?select=*&order=created_at.desc',[]),
+    get('Расходы — черновик','expense_drafts?id=eq.1&select=*',[]),
+    get('Напоминания','reminders?select=*&order=event_date.asc,created_at.asc',[])
   ]);
   ordersData=ps.map(p=>({id:p.id,period:p.title,rows:os.filter(o=>o.period_id===p.id).map(o=>({id:o.id,number:o.number,product:o.product,address:o.address,ldsp:o.ldsp,furniture:o.furniture,facades:o.facades,assembly_ready:o.assembly_ready,assembler:o.assembler,installer:o.installer,note:o.note,ready:o.ready,created_at:o.created_at,updated_at:o.updated_at})),archived:!!p.archived}));
   dodelkiRows=dr;orderedRows=op;expenseHistory=Array.isArray(ex)?ex:[];remindersRows=Array.isArray(rm)?rm:[];
@@ -1021,8 +1040,19 @@ async function loadAll(silent=false){
     if(be)be.value=bal?String(bal):'';
     expenseDraftLoaded=true;
   }
-  renderOrders();renderArchivePanel();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();renderReminders();renderHomeDate();setStatus('● Онлайн',true)
- }catch(e){setStatus('Ошибка соединения',false);if(!silent)toast('Не удалось загрузить данные')}finally{refreshBusy=false}
+  renderOrders();renderArchivePanel();renderDodelki();renderOrdered();renderScheduleAll();renderDashboard();renderExpenseRows();renderExpenseTotal();renderExpenseHistory();renderReminders();renderHomeDate();
+  if(errors.length){
+    setStatus('Ошибка загрузки',false);
+    console.error('[Rubanok] Ошибки загрузки:',errors);
+    if(!silent)toast('Не загрузилось: '+errors.join(' · '));
+  }else{
+    setStatus('● Онлайн',true);
+  }
+ }catch(e){
+  console.error('[Rubanok] Критическая ошибка загрузки',e);
+  setStatus('Ошибка соединения',false);
+  if(!silent)toast('Не удалось загрузить данные: '+(e?.message||e));
+ }finally{refreshBusy=false}
 }
 function periodOpen(id){return localStorage.getItem('period_'+id)!=='closed'}function setPeriodOpen(id,open){localStorage.setItem('period_'+id,open?'open':'closed')}
 function orderMatches(r,q){return !q||[r.number,r.product,r.address].some(v=>String(v||'').toLowerCase().includes(q.toLowerCase()))}
@@ -1309,7 +1339,7 @@ function toggleExpenseHistory(id){
 /* === НАПОМИНАНИЯ === */
 function gmt7Now(){
   // В текущей версии отображаем время UTC+3.
-  return new Date(Date.now()+0*60*60*1000);
+  return new Date(Date.now()+3*60*60*1000);
 }
 function parseReminderDate(v){const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(String(v||''));return m?new Date(Date.UTC(+m[1],+m[2]-1,+m[3])):null}
 function getReminderTarget(r,from=new Date()){
